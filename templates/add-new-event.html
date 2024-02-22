@@ -4,6 +4,37 @@
 
 {% block body %}
 
-
+<div class="container">
+    <h1 class="text-center my-4">Add New Event</h1>
+    <form>
+        <div class="mb-3">
+            <label for="eventTitle" class="form-label">Title of the event</label>
+            <input type="text" class="form-control" id="eventTitle" placeholder="Enter event title">
+        </div>
+        <div class="mb-3">
+            <label for="eventPoster" class="form-label">Picture/Poster</label>
+            <input type="file" class="form-control" id="eventPoster">
+        </div>
+        <div class="mb-3">
+            <label for="eventDateTime" class="form-label">Date and time of the event</label>
+            <input type="datetime-local" class="form-control" id="eventDateTime">
+        </div>
+        <div class="mb-3">
+            <label for="eventDescription" class="form-label">Short description of the event</label>
+            <textarea class="form-control" id="eventDescription" rows="3"></textarea>
+        </div>
+        <div class="mb-3">
+            <label for="eventBudget" class="form-label">Budget</label>
+            <input type="number" class="form-control" id="eventBudget" placeholder="Enter budget">
+        </div>
+        <div class="mb-3">
+            <label for="eventVenue" class="form-label">Venue</label>
+            <input type="text" class="form-control" id="eventVenue" placeholder="Enter venue">
+        </div>
+        <div class="d-grid mx-auto">
+            <a href="{{ url_for('events_overview') }}" class="btn btn-primary">Submit</a>
+        </div>
+    </form>
+</div>
 
 {% endblock %}
