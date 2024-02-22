@@ -8,7 +8,7 @@ import os
 load_dotenv()
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://trackit_okuw_user:16Nw997XXa7RfstCv5vkcKgPB4WnYwRh@dpg-cnbbnfda73kc73fgdulg-a.singapore-postgres.render.com/trackit_okuw"
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
 db = SQLAlchemy(app)
 
 class Todo(db.Model):
