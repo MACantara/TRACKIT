@@ -19,8 +19,12 @@ class Todo(db.Model):
     def __repr__(self):
         return '<Task %r>' % self.id
 
-@app.route("/", methods=['POST', 'GET'])
+@app.route('/')
 def index():
+    return render_template('index.html')
+
+@app.route("/todo", methods=['POST', 'GET'])
+def todo():
     if request.method == 'POST':
         task_content = request.form["task"]
         new_task = Todo(content=task_content)
@@ -34,7 +38,7 @@ def index():
         
     else: 
         tasks = Todo.query.order_by(Todo.date_created).all()
-        return render_template('index.html', tasks=tasks)
+        return render_template('todo.html', tasks=tasks)
 
 @app.route('/delete/<int:id>')
 def delete(id):
