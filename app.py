@@ -23,6 +23,10 @@ class Todo(db.Model):
 def index():
     return render_template('index.html')
 
+@app.route("/events-overview")
+def events_overview():
+    return render_template('events-overview.html')
+
 @app.route("/todo", methods=['POST', 'GET'])
 def todo():
     if request.method == 'POST':
