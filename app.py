@@ -27,6 +27,10 @@ def index():
 def events_overview():
     return render_template('events-overview.html')
 
+@app.route("/add-new-event")
+def add_new_event():
+    return render_template('add-new-event.html')
+
 @app.route("/todo", methods=['POST', 'GET'])
 def todo():
     if request.method == 'POST':
