@@ -26,7 +26,7 @@
             <td>{{ task.date_created.date() }}</td>
             <td>
                 <a href="delete/{{ task.id }}" class="btn btn-danger">Delete</a>
-                <a href="" class="btn btn-primary">Update</a>
+                <a href="update/{{ task.id }}" class="btn btn-primary">Update</a>
             </td>
         </tr>
         {% endfor %}
