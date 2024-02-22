@@ -18,14 +18,16 @@
             <th>Added</th>
             <th>Actions</th>
         </tr>
+        {% for task in tasks %}
         <tr>
-            <td></td>
-            <td></td>
+            <td>{{ task.content }}</td>
+            <td>{{ task.date_created }}</td>
             <td>
                 <a href="" class="btn btn-danger">Delete</a>
                 <a href="" class="btn btn-primary">Update</a>
             </td>
         </tr>
+        {% endfor %}
     </table>
 </div>
 {% endblock %}
