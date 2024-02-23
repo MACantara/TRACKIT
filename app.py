@@ -31,6 +31,10 @@ def events_overview():
 def add_new_event():
     return render_template('add-new-event.html')
 
+@app.route("/event-dashboard")
+def event_dashboard():
+    return render_template("event-dashboard.html")
+
 @app.route("/todo", methods=['POST', 'GET'])
 def todo():
     if request.method == 'POST':
