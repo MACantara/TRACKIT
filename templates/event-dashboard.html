@@ -29,68 +29,74 @@
       </ul>
     </nav>
     <main class="col-12 col-md-10">
-        <div class="container">
-            <div class="row g-3 mb-3 mt-3">
-                <!-- First row: Three cards of equal widths -->
-                <div class="col-12 col-lg-6 col-xl-4">
-                    <div class="card p-5">
-                        <h2>Expenses</h2>
-                        <canvas id="myChart"></canvas>
-                    </div>
-                </div>
-                <div class="col-12 col-lg-6 col-xl-4">
-                    <div class="card p-5">
-                        <h2>Income</h2>
-                        <canvas id="myChart1"></canvas>
-                    </div>
-                </div>
-                <div class="col-12 col-lg-6 col-xl-4">
-                    <div class="card p-5">
-                        <h2>Budget</h2>
-                        <canvas id="myChart2"></canvas>
-                    </div>
-                </div>
+      <div class="container">
+        <div class="row g-3 mb-3 mt-3">
+          <!-- First row: Three cards of equal widths -->
+          <div class="col-12 col-lg-6 col-xl-4">
+            <div class="card p-5">
+              <h2>Expenses</h2>
+              <canvas id="myChart"></canvas>
             </div>
-            <div class="row g-3 mb-3">
-              <!-- Second row: Two cards with specified widths -->
-              <div class="col-12 col-lg-8">
-                <div class="card p-5 chart-container">
-                  <h2>Expense, Income, Budget Graph</h2>
-                  <canvas id="myChart3"></canvas>
-                </div>
-              </div>
-              <div class="col-12 col-lg-4">
-                <div class="card p-5 chart-container">
-                  <h2>Pie Chart Categories</h2>
-                  <canvas id="myChart4"></canvas>
-                </div>
-              </div>
+          </div>
+          <div class="col-12 col-lg-6 col-xl-4">
+            <div class="card p-5">
+              <h2>Income</h2>
+              <canvas id="myChart1"></canvas>
             </div>
-            <div class="row g-3 mb-3">
-              <!-- Third row: Table-like container with a heading -->
-              <div class="col-12 col-lg-6">
-                <table class="table">
-                  <caption class="display-5">Transaction History</caption>
-                  <thead>
-                    <tr>
-                      <th>Heading 1</th>
-                      <th>Heading 2</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>Table cell 1</td>
-                      <td>Table cell 2</td>
-                    </tr>
-                    <tr>
-                      <td>Table cell 3</td>
-                      <td>Table cell 4</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
+          </div>
+          <div class="col-12 col-lg-6 col-xl-4">
+            <div class="card p-5">
+              <h2>Budget</h2>
+              <canvas id="myChart2"></canvas>
             </div>
+          </div>
         </div>
+        <div class="row g-3 mb-3">
+          <!-- Second row: Two cards with specified widths -->
+          <div class="col-12 col-lg-8">
+            <div class="card p-5 chart-container">
+              <h2>Expense, Income, Budget Graph</h2>
+              <canvas id="myChart3"></canvas>
+            </div>
+          </div>
+          <div class="col-12 col-lg-4">
+            <div class="card p-5 chart-container">
+              <h2>Pie Chart Categories</h2>
+              <canvas id="myChart4"></canvas>
+            </div>
+          </div>
+        </div>
+        <div class="row g-3 mb-3">
+          <!-- Third row: Table-like container with a heading -->
+          <div class="table-responsive"> <!-- Add this div -->
+            <table class="table">
+              <caption class="display-5">Transaction History</caption>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Name</th>
+                  <th>Date & Time</th>
+                  <th>Amount</th>
+                  <th>Price</th>
+                  <th>Category</th>
+                  <th>Receipt/Invoice</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Table cell 1</td>
+                  <td>Table cell 2</td>
+                  <td>Table cell 1</td>
+                  <td>Table cell 2</td>
+                  <td>Table cell 1</td>
+                  <td>Table cell 2</td>
+                  <td>Table cell 1</td>
+                </tr>
+              </tbody>
+            </table>
+          </div> <!-- End of the added div -->
+        </div>
+      </div>
     </main>
   </div>
 </div>
