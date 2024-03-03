@@ -14,11 +14,11 @@ const ctx4 = document.getElementById("myChart4");
 new Chart(ctx, {
     type: "bar",
     data: {
-        labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+        labels: ["Food", "Decorations", "Guest Speakers", "Security", "Marketing", "Miscellaneous"],
         datasets: [
             {
-                label: "# of Votes",
-                data: [12, 19, 3, 5, 2, 3],
+                label: "Expenses in PHP",
+                data: [5000, 2000, 3000, 1500, 2500, 1000].map(amount => amount * 50),
                 borderWidth: 1,
             },
         ],
@@ -36,11 +36,11 @@ new Chart(ctx, {
 new Chart(ctx1, {
   type: "bar",
   data: {
-      labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+      labels: ["Ticket Sales", "Sponsorships", "Merchandise", "Food & Beverage Sales"],
       datasets: [
           {
-              label: "# of Votes",
-              data: [12, 19, 3, 5, 2, 3],
+              label: "Income in PHP",
+              data: [6000, 4000, 2000, 3000].map(amount => amount * 50),
               borderWidth: 1,
           },
       ],
@@ -58,11 +58,11 @@ new Chart(ctx1, {
 new Chart(ctx2, {
   type: "bar",
   data: {
-      labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+      labels: ["Initial Budget", "Final Expenditure", "Final Income"],
       datasets: [
           {
-              label: "# of Votes",
-              data: [12, 19, 3, 5, 2, 3],
+              label: "Budget in PHP",
+              data: [15000, 13000, 15000].map(amount => amount * 50),
               borderWidth: 1,
           },
       ],
@@ -78,35 +78,38 @@ new Chart(ctx2, {
 
 // Expenses, Income, Budget Line Chart
 
-const xValues = [100,200,300,400,500,600,700,800,900,1000];
+const xValues = ["Day 1","Day 2","Day 3","Day 4","Day 5","Day 6","Day 7"];
 
 new Chart(ctx3, {
   type: "line",
   data: {
     labels: xValues,
     datasets: [{
-      data: [860,1140,1060,1060,1070,1110,1330,2210,7830,2478],
+      data: [2000, 2500, 3000, 3500, 4000, 4500, 5000].map(amount => amount * 50),
       borderColor: "red",
-      fill: false
+      fill: false,
+      label: "Expenses"
     },{
-      data: [1600,1700,1700,1900,2000,2700,4000,5000,6000,7000],
+      data: [1000, 2000, 3000, 4000, 5000, 6000, 7000].map(amount => amount * 50),
       borderColor: "green",
-      fill: false
+      fill: false,
+      label: "Income"
     },{
-      data: [300,700,2000,5000,6000,4000,2000,1000,200,100],
+      data: [15000, 13000, 11000, 9000, 7000, 5000, 3000].map(amount => amount * 50),
       borderColor: "blue",
-      fill: false
+      fill: false,
+      label: "Budget"
     }]
   },
   options: {
-    legend: {display: false}
+    legend: {display: true}
   }
 });
 
-// doughnut chart Categories
+// Doughnut chart Categories
 
-var Values = ["Italy", "France", "Spain", "USA", "Argentina"];
-var Values2 = [55, 49, 44, 24, 15];
+var Values = ["Engineering", "Arts", "Science", "Business", "Law"];
+var Values2 = [200, 150, 180, 170, 100].map(amount => amount * 50);
 var barColors = [
   "#b91d47",
   "#00aba9",
@@ -127,7 +130,7 @@ new Chart(ctx4, {
   options: {
     title: {
       display: true,
-      text: "World Wide Wine Production 2018"
+      text: "Attendees by Faculty"
     }
   }
 });
