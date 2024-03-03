@@ -7,90 +7,90 @@
   <div class="row h-100">
     <nav class="col-12 col-md-2 col-sm-auto bg-dark text-white p-4">
       <ul class="navbar-nav">
-        <li class="nav-item mb-5 mt-5 h4">
-          <a class="nav-link" href="{{ url_for('events_overview')}}"><i class="bi bi-chevron-left"></i>Back to Events Overview</a>
+        <li class="nav-item mb-5 mt-5 h5">
+          <a class="nav-link" href="{{ url_for('events_overview')}}"><i class="bi bi-chevron-left"></i>Back to Events
+            Overview</a>
         </li>
-        <li class="nav-item mb-5 mt-5 h4">
+        <li class="nav-item mb-5 mt-5 h5">
           <a class="nav-link" href="#">Dashboard</a>
         </li>
-        <li class="nav-item mb-5 mt-5 h4">
+        <li class="nav-item mb-5 mt-5 h5">
           <a class="nav-link" href="#">Expenses</a>
         </li>
-        <li class="nav-item mb-5 mt-5 h4">
+        <li class="nav-item mb-5 mt-5 h5">
           <a class="nav-link" href="#">Income</a>
         </li>
-        <li class="nav-item mb-5 mt-5 h4">
+        <li class="nav-item mb-5 mt-5 h5">
           <a class="nav-link" href="#">Transaction History</a>
         </li>
-        <li class="nav-item mb-5 mt-5 h4">
+        <li class="nav-item mb-5 mt-5 h5">
           <a class="nav-link" href="#">Report</a>
         </li>
       </ul>
     </nav>
     <main class="col-12 col-md-10">
-
-      <div class="container">
-        <div class="row">
-          <!-- First row: Three cards of equal widths -->
-          <div class="col-md-4">
-            <div class="card p-5">
-              <h2>Expenses</h2>
-              <canvas id="myChart"></canvas>
+        <div class="container">
+            <div class="row g-3 mb-3 mt-3">
+                <!-- First row: Three cards of equal widths -->
+                <div class="col-12 col-lg-6 col-xl-4">
+                    <div class="card p-5">
+                        <h2>Expenses</h2>
+                        <canvas id="myChart"></canvas>
+                    </div>
+                </div>
+                <div class="col-12 col-lg-6 col-xl-4">
+                    <div class="card p-5">
+                        <h2>Income</h2>
+                        <canvas id="myChart1"></canvas>
+                    </div>
+                </div>
+                <div class="col-12 col-lg-6 col-xl-4">
+                    <div class="card p-5">
+                        <h2>Budget</h2>
+                        <canvas id="myChart2"></canvas>
+                    </div>
+                </div>
             </div>
-          </div>
-          <div class="col-md-4">
-            <div class="card p-5">
-              <h2>Income</h2>
-              <canvas id="myChart1"></canvas>
+            <div class="row g-3 mb-3">
+              <!-- Second row: Two cards with specified widths -->
+              <div class="col-12 col-lg-8">
+                <div class="card p-5 chart-container">
+                  <h2>Expense, Income, Budget Graph</h2>
+                  <canvas id="myChart3"></canvas>
+                </div>
+              </div>
+              <div class="col-12 col-lg-4">
+                <div class="card p-5 chart-container">
+                  <h2>Pie Chart Categories</h2>
+                  <canvas id="myChart4"></canvas>
+                </div>
+              </div>
             </div>
-          </div>
-          <div class="col-md-4">
-            <div class="card p-5">
-              <h2>Budget</h2>
-              <canvas id="myChart2"></canvas>
+            <div class="row g-3 mb-3">
+              <!-- Third row: Table-like container with a heading -->
+              <div class="col-12 col-lg-6">
+                <table class="table">
+                  <caption class="display-5">Transaction History</caption>
+                  <thead>
+                    <tr>
+                      <th>Heading 1</th>
+                      <th>Heading 2</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Table cell 1</td>
+                      <td>Table cell 2</td>
+                    </tr>
+                    <tr>
+                      <td>Table cell 3</td>
+                      <td>Table cell 4</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
-          </div>
         </div>
-        <div class="row">
-          <!-- Second row: Two cards with specified widths -->
-          <div class="col-md-9">
-            <div class="card p-5">
-              <h2>Expense, Income, Budget Graph</h2>
-              <canvas id="myChart3"></canvas>
-            </div>
-          </div>
-          <div class="col-md-3">
-            <div class="card p-5">
-              <h2>Pie Chart Categories</h2>
-              <canvas id="myChart4"></canvas>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <!-- Third row: Table-like container with a heading -->
-          <div class="col">
-            <table class="table">
-              <caption class="display-5">Transaction History</caption>
-              <thead>
-                <tr>
-                  <th>Heading 1</th>
-                  <th>Heading 2</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Table cell 1</td>
-                  <td>Table cell 2</td>
-                </tr>
-                <tr>
-                  <td>Table cell 3</td>
-                  <td>Table cell 4</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
     </main>
   </div>
 </div>
