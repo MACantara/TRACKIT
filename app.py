@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, send_from_directory
+from flask import Flask, render_template, request, redirect, send_from_directory, make_response
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 from psycopg2 import connect, Error

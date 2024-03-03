@@ -1,5 +1,8 @@
 {
     "cSpell.words": [
-        "TRACKIT"
+        "pdfkit",
+        "psycopg",
+        "TRACKIT",
+        "wkhtmltopdf"
     ]
 }
