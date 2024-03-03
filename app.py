@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, send_from_directory
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 from psycopg2 import connect, Error
@@ -22,6 +22,10 @@ class Todo(db.Model):
 @app.route('/')
 def index():
     return render_template('index.html')
+
+@app.route('/robot.txt')
+def serve_robot_txt():
+    return send_from_directory(app.static_folder, request.path[1:])
 
 @app.route("/events-overview")
 def events_overview():
