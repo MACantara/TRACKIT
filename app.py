@@ -35,6 +35,22 @@ def add_new_event():
 def event_dashboard():
     return render_template("event-dashboard.html")
 
+@app.route("/expenses")
+def expenses():
+    return render_template("expenses.html")
+
+@app.route("/income")
+def income():
+    return render_template("income.html")
+
+@app.route("/transaction-history")
+def transaction_history():
+    return render_template("transaction-history.html")
+
+@app.route("/report")
+def report():
+    return render_template("report.html")
+
 @app.route("/todo", methods=['POST', 'GET'])
 def todo():
     if request.method == 'POST':
