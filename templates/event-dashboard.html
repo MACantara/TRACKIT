@@ -3,28 +3,81 @@
 {% block title %} University Week {% endblock %}
 
 {% block body %}
-<div class="container-fluid">
-  <div class="row">
-      <nav class="col-md-2 d-none d-md-block bg-dark text-white vh-100 p-4">
-        <ul class="navbar-nav flex-column">
-          <li class="nav-item mb-5 h4">
-            <a class="nav-link" href="#">Dashboard</a>
-          </li>
-          <li class="nav-item mb-5 h4">
-            <a class="nav-link" href="#">Expenses</a>
-          </li>
-          <li class="nav-item mb-5 h4">
-            <a class="nav-link" href="#">Income</a>
-          </li>
-          <li class="nav-item mb-5 h4">
-            <a class="nav-link" href="#">Transaction History</a>
-          </li>
-          <li class="nav-item mb-5 h4">
-            <a class="nav-link" href="#">Report</a>
-          </li>
-        </ul>
-      </nav>
-      <!-- Your website content goes here -->
+<div class="container-fluid h-100">
+  <div class="row h-100">
+    <nav class="col-12 col-md-2 col-sm-auto bg-dark text-white p-4">
+      <ul class="navbar-nav">
+        <li class="nav-item mb-5 mt-5 h4">
+          <a class="nav-link" href="{{ url_for('events_overview')}}"><i class="bi bi-chevron-left"></i>Back to Events Overview</a>
+        </li>
+        <li class="nav-item mb-5 mt-5 h4">
+          <a class="nav-link" href="#">Dashboard</a>
+        </li>
+        <li class="nav-item mb-5 mt-5 h4">
+          <a class="nav-link" href="#">Expenses</a>
+        </li>
+        <li class="nav-item mb-5 mt-5 h4">
+          <a class="nav-link" href="#">Income</a>
+        </li>
+        <li class="nav-item mb-5 mt-5 h4">
+          <a class="nav-link" href="#">Transaction History</a>
+        </li>
+        <li class="nav-item mb-5 mt-5 h4">
+          <a class="nav-link" href="#">Report</a>
+        </li>
+      </ul>
+    </nav>
+    <main class="col-12 col-md-10">
+      <div class="container">
+        <div class="row">
+          <!-- First row: Three cards of equal widths -->
+          <div class="col-md-4">
+            <div class="card p-5">Card 1</div>
+          </div>
+          <div class="col-md-4">
+            <div class="card p-5">Card 2</div>
+          </div>
+          <div class="col-md-4">
+            <div class="card p-5">Card 3</div>
+          </div>
+        </div>
+        <div class="row">
+          <!-- Second row: Two cards with specified widths -->
+          <div class="col-md-9">
+            <div class="card p-5">Left card (75%)</div>
+          </div>
+          <div class="col-md-3">
+            <div class="card p-5">Right card (25%)</div>
+          </div>
+        </div>
+        <div class="row">
+          <!-- Third row: Table-like container with a heading -->
+          <div class="col">
+            <table class="table">
+              <caption class="display-5">Transaction History</caption>
+              <thead>
+                <tr>
+                  <th>Heading 1</th>
+                  <th>Heading 2</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Table cell 1</td>
+                  <td>Table cell 2</td>
+                </tr>
+                <tr>
+                  <td>Table cell 3</td>
+                  <td>Table cell 4</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </main>
   </div>
 </div>
+
+
 {% endblock %}
