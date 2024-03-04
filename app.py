@@ -27,6 +27,14 @@ def index():
 def serve_robot_txt():
     return send_from_directory(app.static_folder, request.path[1:])
 
+@app.route("/log-in")
+def log_in():
+    return render_template('log-in.html')
+
+@app.route("/sign-up")
+def sign_up():
+    return render_template('sign-up.html')
+
 @app.route("/events-overview")
 def events_overview():
     return render_template('events-overview.html')
