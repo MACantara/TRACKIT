@@ -1,7 +1,10 @@
 {
     "cSpell.words": [
+        "dotenv",
         "pdfkit",
         "psycopg",
+        "sqlalchemy",
+        "SQLALCHEMY",
         "TRACKIT",
         "wkhtmltopdf"
     ]

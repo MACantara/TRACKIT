@@ -27,15 +27,15 @@ def index():
 def serve_robot_txt():
     return send_from_directory(app.static_folder, request.path[1:])
 
-@app.route("/log-in")
+@app.route("/log-in", methods=['POST', 'GET'])
 def log_in():
     return render_template('log-in.html')
 
-@app.route("/sign-up")
+@app.route("/sign-up", methods=['POST', 'GET'])
 def sign_up():
     return render_template('sign-up.html')
 
-@app.route("/events-overview")
+@app.route("/events-overview", methods=['POST', 'GET'])
 def events_overview():
     return render_template('events-overview.html')
 
