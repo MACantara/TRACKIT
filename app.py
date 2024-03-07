@@ -14,10 +14,22 @@ db = SQLAlchemy(app)
 class Todo(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     content = db.Column(db.String(200), nullable=False)
+    category = db.Column(db.String(50), nullable=False)
     date_created = db.Column(db.DateTime, default=datetime.utcnow)
 
     def __repr__(self):
         return '<Task %r>' % self.id
+    
+class Expense(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    expense_name = db.Column(db.String(200), nullable=False)
+    date_created = db.Column(db.DateTime, default=datetime.utcnow)
+    amount = db.Column(db.Float, nullable=False)  # Changed from db.Integer to db.Float
+    price = db.Column(db.Float, nullable=False)  # Changed from db.Integer to db.Float
+    category = db.Column(db.String(50), nullable=False)
+
+    def __repr__(self):
+        return '<Expense %r>' % self.id
 
 @app.route('/')
 def index():
@@ -47,9 +59,10 @@ def add_new_event():
 def event_dashboard():
     return render_template("event-dashboard.html")
 
-@app.route("/expenses")
+@app.route('/expenses')
 def expenses():
-    return render_template("expenses.html")
+    expenses = Expense.query.all()
+    return render_template('expenses.html', expenses=expenses)
 
 @app.route("/income")
 def income():
@@ -67,7 +80,8 @@ def report():
 def todo():
     if request.method == 'POST':
         task_content = request.form["task"]
-        new_task = Todo(content=task_content)
+        task_category = request.form["category"]
+        new_task = Todo(content=task_content, category=task_category)
         
         try:
             db.session.add(new_task)
@@ -79,6 +93,29 @@ def todo():
     else: 
         tasks = Todo.query.order_by(Todo.date_created).all()
         return render_template('todo.html', tasks=tasks)
+    
+@app.route("/add-expense", methods=['GET'])
+def add_expense():
+    return render_template("add-expense.html")
+
+@app.route("/create-expense", methods=['POST'])
+def create_expense():
+    if request.method == 'POST':
+        expense_name = request.form["expense-name"]
+        amount = request.form["amount"]
+        price = request.form["price"]
+        category = request.form["category"]
+        new_expense = Expense(expense_name=expense_name, amount=amount, price=price, category=category)
+
+        try:
+            db.session.add(new_expense)
+            db.session.commit()
+            return redirect('/expenses')
+        except:
+            return "There was an issue adding your expense"
+    else:
+        expenses = Expense.query.order_by(Expense.date_created).all()
+        return render_template('expenses.html', expenses=expenses)
 
 @app.route('/delete/<int:id>')
 def delete(id):
@@ -96,6 +133,7 @@ def update(id):
     task = Todo.query.get_or_404(id)
     if request.method == 'POST':
         task.content = request.form['task']
+        task.category = request.form['category']
         
         try:
             db.session.commit()

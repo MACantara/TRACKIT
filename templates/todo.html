@@ -7,8 +7,10 @@
     <h1 class="text-center">Task Master</h1>
     <form action="/todo" method="post">
         <div class="mb-3">
-            <label for="task" class="form-label">Task</label>
-            <input type="text" class="form-control" id="task" name="task">
+            <label for="task" class="form-label">Task: </label>
+            <input type="text" class="form-control" id="task" name="task" placeholder="Enter task name">
+            <label for="category" class="form-label">Category: </label>
+            <input type="text" class="form-control" id="category" name="category" placeholder="Enter task category">
         </div>
         <button type="submit" class="btn btn-primary">Add Task</button>
     </form>
@@ -19,6 +21,7 @@
             <tr>
                 <th>Task ID</th>
                 <th>Task</th>
+                <th>Category</th>
                 <th>Added</th>
                 <th>Actions</th>
             </tr>
@@ -26,6 +29,7 @@
             <tr>
                 <td>{{ task.id }}</td>
                 <td>{{ task.content }}</td>
+                <td>{{ task.category }}</td>
                 <td>{{ task.date_created.date() }}</td>
                 <td>
                     <a href="delete/{{ task.id }}" class="btn btn-danger">Delete</a>

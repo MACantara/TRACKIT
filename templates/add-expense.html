@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %} Add Expense {% endblock %}
+
+{% block body %}
+<div class="container mt-3">
+    <h1 class="text-center">Add Expense</h1>
+    <form action="/create-expense" method="post">
+        <div class="mb-3">
+            <label for="expense-name" class="form-label">Expense Name: </label>
+            <input type="text" class="form-control" id="expense-name" name="expense-name" placeholder="Enter expense name">
+            <label for="amount" class="form-label">Amount: </label>
+            <input type="text" class="form-control" id="amount" name="amount" placeholder="Enter expense amount">
+            <label for="price" class="form-label">Price: </label>
+            <input type="text" class="form-control" id="price" name="price" placeholder="Enter expense price">
+            <label for="category" class="form-label">Category: </label>
+            <input type="text" class="form-control" id="category" name="category" placeholder="Enter expense category">
+        </div>
+        <button type="submit" class="btn btn-primary">Add Expense</button>
+    </form>
+</div>
+{% endblock %}

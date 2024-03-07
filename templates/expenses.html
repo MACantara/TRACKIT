@@ -21,103 +21,23 @@
                                     <th>Amount</th>
                                     <th>Price</th>
                                     <th>Category</th>
-                                    <th>Receipt/Invoice</th>
                                 </tr>
                             </thead>
                             <tbody>
+                                {% for expense in expenses %}
                                 <tr>
-                                    <td>1</td>
-                                    <td>Food Purchase</td>
-                                    <td>2022-03-01 10:00</td>
-                                    <td>100</td>
-                                    <td>50</td>
-                                    <td>Food</td>
-                                    <td>Receipt001.pdf</td>
+                                    <td>{{ expense.id }}</td>
+                                    <td>{{ expense.expense_name }}</td>
+                                    <td>{{ expense.date_created.date() }}</td>
+                                    <td>{{ expense.amount }}</td>
+                                    <td>{{ expense.price }}</td>
+                                    <td>{{ expense.category }}</td>
                                 </tr>
-                                <tr>
-                                    <td>2</td>
-                                    <td>Decorations Purchase</td>
-                                    <td>2022-03-01 11:00</td>
-                                    <td>200</td>
-                                    <td>100</td>
-                                    <td>Decorations</td>
-                                    <td>Receipt002.pdf</td>
-                                </tr>
-                                <tr>
-                                    <td>3</td>
-                                    <td>Guest Speaker Fee</td>
-                                    <td>2022-03-01 12:00</td>
-                                    <td>300</td>
-                                    <td>300</td>
-                                    <td>Guest Speakers</td>
-                                    <td>Receipt003.pdf</td>
-                                </tr>
-                                <tr>
-                                    <td>4</td>
-                                    <td>Security Services</td>
-                                    <td>2022-03-02 10:00</td>
-                                    <td>150</td>
-                                    <td>150</td>
-                                    <td>Security</td>
-                                    <td>Receipt004.pdf</td>
-                                </tr>
-                                <tr>
-                                    <td>5</td>
-                                    <td>Marketing Materials</td>
-                                    <td>2022-03-02 11:00</td>
-                                    <td>250</td>
-                                    <td>125</td>
-                                    <td>Marketing</td>
-                                    <td>Receipt005.pdf</td>
-                                </tr>
-                                <tr>
-                                    <td>6</td>
-                                    <td>Miscellaneous Expenses</td>
-                                    <td>2022-03-02 12:00</td>
-                                    <td>100</td>
-                                    <td>100</td>
-                                    <td>Miscellaneous</td>
-                                    <td>Receipt006.pdf</td>
-                                </tr>
-                                <tr>
-                                    <td>7</td>
-                                    <td>Ticket Sales</td>
-                                    <td>2022-03-03 10:00</td>
-                                    <td>600</td>
-                                    <td>3000</td>
-                                    <td>Income</td>
-                                    <td>Receipt007.pdf</td>
-                                </tr>
-                                <tr>
-                                    <td>8</td>
-                                    <td>Sponsorships</td>
-                                    <td>2022-03-03 11:00</td>
-                                    <td>4</td>
-                                    <td>4000</td>
-                                    <td>Income</td>
-                                    <td>Receipt008.pdf</td>
-                                </tr>
-                                <tr>
-                                    <td>9</td>
-                                    <td>Merchandise Sales</td>
-                                    <td>2022-03-03 12:00</td>
-                                    <td>200</td>
-                                    <td>2000</td>
-                                    <td>Income</td>
-                                    <td>Receipt009.pdf</td>
-                                </tr>
-                                <tr>
-                                    <td>10</td>
-                                    <td>Food & Beverage Sales</td>
-                                    <td>2022-03-04 10:00</td>
-                                    <td>300</td>
-                                    <td>3000</td>
-                                    <td>Income</td>
-                                    <td>Receipt010.pdf</td>
-                                </tr>
+                                {% endfor %}
                             </tbody>
                         </table>
                     </div>
+                    <a href="{{ url_for('add_expense') }}" class="btn btn-primary">Add Expense</a>
                 </div>
             </div>
         </main>
