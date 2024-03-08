@@ -57,7 +57,8 @@ def sign_up():
 
 @app.route("/events-overview", methods=['POST', 'GET'])
 def events_overview():
-    return render_template('events-overview.html')
+    events = Event.query.all()
+    return render_template("events-overview.html", events=events)
 
 # Flask route to render the add event form
 @app.route("/add-event-form")
