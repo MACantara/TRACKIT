@@ -4,6 +4,7 @@ from datetime import datetime
 from psycopg2 import connect, Error
 from dotenv import load_dotenv
 import os
+import psycopg2
 
 load_dotenv()
 
@@ -30,6 +31,13 @@ class Expense(db.Model):
 
     def __repr__(self):
         return '<Expense %r>' % self.id
+    
+class Event(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(200), nullable=False)
+    date = db.Column(db.Date, nullable=False)
+    description = db.Column(db.Text, nullable=False)
+    budget = db.Column(db.Float, nullable=False)
 
 @app.route('/')
 def index():
@@ -51,9 +59,31 @@ def sign_up():
 def events_overview():
     return render_template('events-overview.html')
 
-@app.route("/add-new-event")
-def add_new_event():
+# Flask route to render the add event form
+@app.route("/add-event-form")
+def add_event_form():
     return render_template('add-new-event.html')
+
+# Flask route to handle the form submission and add the event to the database
+@app.route("/add-event", methods=['GET', 'POST'])
+def add_event():
+    if request.method == 'POST':
+        event_title = request.form['eventTitle']
+        event_date_time = datetime.strptime(request.form['eventDateTime'], '%Y-%m-%dT%H:%M')
+        event_description = request.form['eventDescription']
+        event_budget = request.form['eventBudget']
+
+        new_event = Event(title=event_title, date=event_date_time, description=event_description, budget=event_budget)
+        try:
+            db.session.add(new_event)
+            db.session.commit()
+            redirect("/events-overview")
+        except Exception as error:
+            return f"Error while adding event to the database: {error}"
+
+    events = Event.query.all()
+    return render_template("events-overview.html", events=events)
+
 
 @app.route("/event-dashboard")
 def event_dashboard():
