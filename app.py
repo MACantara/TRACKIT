@@ -4,8 +4,9 @@
 # TODO: Add a secure forget password mechanism
 # TODO: Connect the log in system to the database
 
-from flask import Flask, render_template, request, redirect, send_from_directory, make_response
+from flask import Flask, render_template, request, redirect, send_from_directory, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
+from flask_login import LoginManager, login_user, logout_user, current_user, login_required
 from datetime import datetime
 from psycopg2 import connect, Error
 from dotenv import load_dotenv
@@ -16,8 +17,15 @@ import psycopg2
 load_dotenv()
 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
 db = SQLAlchemy(app)
+login_manager = LoginManager()
+login_manager.init_app(app)
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -70,11 +78,34 @@ def serve_robot_txt():
 
 @app.route("/log-in", methods=['POST', 'GET'])
 def log_in():
+    if request.method == 'POST':
+        user = User.query.filter_by(email=request.form['email']).first()
+        if user and check_password_hash(user.password_hash, request.form['password']):
+            login_user(user)
+            return redirect(url_for('dashboard'))
+        flash('Invalid username/password')
     return render_template('log-in.html')
 
 @app.route("/sign-up", methods=['POST', 'GET'])
 def sign_up():
+    if request.method == 'POST':
+        new_user = User(
+            first_name=request.form['firstname'],
+            last_name=request.form['lastname'],
+            email=request.form['email'],
+            username=request.form['username']
+        )
+        new_user.set_password(request.form['password'])
+        db.session.add(new_user)
+        db.session.commit()
+        return redirect(url_for('log_in'))
     return render_template('sign-up.html')
+
+@app.route("/logout")
+@login_required
+def log_out():
+    logout_user()
+    return redirect(url_for('index'))
 
 @app.route("/events-overview", methods=['POST', 'GET'])
 def events_overview():
@@ -108,6 +139,7 @@ def add_event():
 
 
 @app.route("/event-dashboard")
+@login_required
 def event_dashboard():
     events = Event.query.all()
     return render_template("event-dashboard.html", events=events)
