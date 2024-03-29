@@ -150,6 +150,35 @@ def add_event():
     events = Event.query.all()
     return render_template("events-overview.html", events=events)
 
+@app.route('/update-event/<int:id>', methods=['GET', 'POST'])
+@login_required
+def update_event(id):
+    event = Event.query.get_or_404(id)
+    if request.method == 'POST':
+        event.title = request.form['eventTitle']
+        event.date = datetime.strptime(request.form['eventDateTime'], '%Y-%m-%dT%H:%M')
+        event.description = request.form['eventDescription']
+        event.budget = request.form['eventBudget']
+        
+        try:
+            db.session.commit()
+            return redirect('/events-overview')
+        except:
+            return 'There was an issue updating your event'
+    else:
+        return render_template('update-event.html', event=event)
+
+@app.route('/delete-event/<int:id>')
+@login_required
+def delete_event(id):
+    event_to_delete = Event.query.get_or_404(id)
+    
+    try:
+        db.session.delete(event_to_delete)
+        db.session.commit()
+        return redirect('/events-overview')
+    except:
+        return 'There was an issue deleting that event'
 
 @app.route("/event-dashboard")
 @login_required
@@ -214,32 +243,6 @@ def create_expense():
     else:
         expenses = Expense.query.order_by(Expense.date_created).all()
         return render_template('expenses.html', expenses=expenses)
-
-@app.route('/delete/<int:id>')
-def delete(id):
-    task_to_delete = Todo.query.get_or_404(id)
-    
-    try:
-        db.session.delete(task_to_delete)
-        db.session.commit()
-        return redirect('/todo')
-    except:
-        return 'There was an issue deleting that task'
-
-@app.route('/update/<int:id>', methods=['GET', 'POST'])
-def update(id):
-    task = Todo.query.get_or_404(id)
-    if request.method == 'POST':
-        task.content = request.form['task']
-        task.category = request.form['category']
-        
-        try:
-            db.session.commit()
-            return redirect('/todo')
-        except:
-            return 'There was an issue updating your task'
-    else:
-        return render_template('update.html', task=task)
 
 if __name__ == "__main__":
     with app.app_context():

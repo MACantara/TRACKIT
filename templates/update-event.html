@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %} TRACKIT {% endblock %}
+
+{% block body %}
+<div class="container mt-3">
+    <h1 class="text-center">Update Event</h1>
+    <form action="/update-event/{{ event.id }}" method="post">
+        <div class="mb-3">
+            <label for="eventTitle" class="form-label">Event Title:</label>
+            <input type="text" class="form-control" id="eventTitle" name="eventTitle" value="{{ event.title }}">
+            <label for="eventDateTime" class="form-label">Date:</label>
+            <input type="datetime-local" class="form-control" id="eventDateTime" name="eventDateTime" value="{{ event.date.strftime('%Y-%m-%dT%H:%M') }}">
+            <label for="eventDescription" class="form-label">Description:</label>
+            <textarea class="form-control" id="eventDescription" name="eventDescription">{{ event.description }}</textarea>
+            <label for="eventBudget" class="form-label">Budget:</label>
+            <input type="number" class="form-control" id="eventBudget" name="eventBudget" value="{{ event.budget }}">
+        </div>
+        <button type="submit" class="btn btn-primary">Update Event</button>
+    </form>
+</div>
+{% endblock %}
