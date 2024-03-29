@@ -59,6 +59,7 @@ class Event(db.Model):
     description = db.Column(db.Text, nullable=False)
     budget = db.Column(db.Float, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    expenses = db.relationship('Expense', backref='event', lazy=True)
 
 class Expense(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -67,9 +68,22 @@ class Expense(db.Model):
     amount = db.Column(db.Float, nullable=False)  # Changed from db.Integer to db.Float
     price = db.Column(db.Float, nullable=False)  # Changed from db.Integer to db.Float
     category = db.Column(db.String(50), nullable=False)
+    event_id = db.Column(db.Integer, db.ForeignKey('event.id'), nullable=False)
 
     def __repr__(self):
         return '<Expense %r>' % self.id
+
+class Income(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    income_name = db.Column(db.String(100), nullable=False)
+    amount = db.Column(db.Float, nullable=False)
+    price = db.Column(db.Float, nullable=False)
+    category = db.Column(db.String(100), nullable=False)
+    date_created = db.Column(db.DateTime, default=datetime.utcnow)
+    event_id = db.Column(db.Integer, db.ForeignKey('event.id'), nullable=False)
+
+    def __repr__(self):
+        return f"Income('{self.income_name}', '{self.amount}', '{self.price}', '{self.category}')"
 
 @app.route('/')
 def index():
@@ -178,45 +192,71 @@ def event_dashboard(id):
     event = Event.query.get_or_404(id)
     return render_template("event-dashboard.html", event=event)
 
-@app.route('/expenses')
-def expenses():
-    expenses = Expense.query.all()
-    return render_template('expenses.html', expenses=expenses)
+@app.route('/expenses/<int:id>')
+def expenses(id):
+    event = Event.query.get_or_404(id)
+    expenses = event.expenses
+    return render_template('expenses.html', expenses=expenses, event=event)
 
-@app.route("/income")
-def income():
-    return render_template("income.html")
+@app.route("/income/<int:id>")
+def income(id):
+    event = Event.query.get_or_404(id)
+    incomes = Income.query.filter_by(id=event.id).all()
+    return render_template("income.html", event=event, incomes=incomes)
 
-@app.route("/transaction-history")
-def transaction_history():
-    return render_template("transaction-history.html")
+@app.route("/add-income/<int:id>", methods=['GET', 'POST'])
+def add_income(id):
+    event = Event.query.get_or_404(id)
+    if request.method == 'POST':
+        income_name = request.form["income-name"]
+        amount = request.form["amount"]
+        price = request.form["price"]
+        category = request.form["category"]
+        new_income = Income(income_name=income_name, amount=amount, price=price, category=category, event_id=event.id)
 
-@app.route("/report")
-def report():
-    return render_template("report.html")
+        try:
+            db.session.add(new_income)
+            db.session.commit()
+            return redirect(url_for('income', id=event.id))
+        except:
+            return "There was an issue adding your income"
+    else:
+        return render_template('add-income.html', event=event)
+
+@app.route("/transaction-history/<int:id>")
+def transaction_history(id):
+    event = Event.query.get_or_404(id)
+    return render_template("transaction-history.html", event=event)
+
+@app.route("/report/<int:id>")
+def report(id):
+    event = Event.query.get_or_404(id)
+    return render_template("report.html", event=event)
     
-@app.route("/add-expense", methods=['GET'])
-def add_expense():
-    return render_template("add-expense.html")
+@app.route("/add-expense/<int:id>", methods=['GET'])
+def add_expense(id):
+    event = Event.query.get_or_404(id)
+    return render_template("add-expense.html", event=event)
 
-@app.route("/create-expense", methods=['POST'])
-def create_expense():
+@app.route("/create-expense/<int:id>", methods=['POST'])
+def create_expense(id):
+    event = Event.query.get_or_404(id)
     if request.method == 'POST':
         expense_name = request.form["expense-name"]
         amount = request.form["amount"]
         price = request.form["price"]
         category = request.form["category"]
-        new_expense = Expense(expense_name=expense_name, amount=amount, price=price, category=category)
+        new_expense = Expense(expense_name=expense_name, amount=amount, price=price, category=category, event_id=event.id)  # Changed id to event_id
 
         try:
             db.session.add(new_expense)
             db.session.commit()
-            return redirect('/expenses')
+            return redirect(url_for('expenses', id=event.id))
         except:
             return "There was an issue adding your expense"
     else:
-        expenses = Expense.query.order_by(Expense.date_created).all()
-        return render_template('expenses.html', expenses=expenses)
+        expenses = event.expenses
+        return render_template('expenses.html', expenses=expenses, event=event)
 
 if __name__ == "__main__":
     with app.app_context():

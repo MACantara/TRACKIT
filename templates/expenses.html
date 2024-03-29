@@ -24,7 +24,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                {% for expense in expenses %}
+                                {% for expense in event.expenses %}
                                 <tr>
                                     <td>{{ expense.id }}</td>
                                     <td>{{ expense.expense_name }}</td>
@@ -37,7 +37,7 @@
                             </tbody>
                         </table>
                     </div>
-                    <a href="{{ url_for('add_expense') }}" class="btn btn-primary">Add Expense</a>
+                    <a href="{{ url_for('add_expense', id=event.id) }}" class="btn btn-primary">Add Expense</a>
                 </div>
             </div>
         </main>

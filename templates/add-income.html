@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %} Add Income {% endblock %}
+
+{% block body %}
+<div class="container mt-3">
+    <h1 class="text-center">Add Income</h1>
+    <form action="{{ url_for('add_income', id=event.id) }}" method="post">
+        <div class="mb-3">
+            <label for="income-name" class="form-label">Income Name: </label>
+            <input type="text" class="form-control" id="income-name" name="income-name" placeholder="Enter income name">
+            <label for="amount" class="form-label">Amount: </label>
+            <input type="text" class="form-control" id="amount" name="amount" placeholder="Enter income amount">
+            <label for="price" class="form-label">Price: </label>
+            <input type="text" class="form-control" id="price" name="price" placeholder="Enter income price">
+            <label for="category" class="form-label">Category: </label>
+            <input type="text" class="form-control" id="category" name="category" placeholder="Enter income category">
+        </div>
+        <button type="submit" class="btn btn-primary">Add Income</button>
+    </form>
+</div>
+{% endblock %}
