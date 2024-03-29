@@ -2,7 +2,8 @@
 # Add Log in & Register system
 # Secure the details from the log in system
 # Connect the log in system to the database
-# TODO: Connect the users to events that user created
+# Connect the users to events that user created
+# TODO: Add ability to update and delete events
 
 from flask import Flask, render_template, request, redirect, send_from_directory, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
