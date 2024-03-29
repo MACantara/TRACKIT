@@ -6,7 +6,7 @@
 
 from flask import Flask, render_template, request, redirect, send_from_directory, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager, login_user, logout_user, current_user, login_required
+from flask_login import LoginManager, login_user, logout_user, current_user, login_required, UserMixin
 from datetime import datetime
 from psycopg2 import connect, Error
 from dotenv import load_dotenv
@@ -27,13 +27,14 @@ login_manager.init_app(app)
 def load_user(user_id):
     return User.query.get(int(user_id))
 
-class User(db.Model):
+class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     first_name = db.Column(db.String(64), index=True)
     last_name = db.Column(db.String(64), index=True)
     email = db.Column(db.String(120), index=True, unique=True)
     username = db.Column(db.String(64), index=True, unique=True)
     password_hash = db.Column(db.String(256))
+    events = db.relationship('Event', backref='creator', lazy=True)
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -75,6 +76,7 @@ class Event(db.Model):
     date = db.Column(db.Date, nullable=False)
     description = db.Column(db.Text, nullable=False)
     budget = db.Column(db.Float, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
 @app.route('/')
 def index():
@@ -116,8 +118,10 @@ def log_out():
     return redirect(url_for('index'))
 
 @app.route("/events-overview", methods=['POST', 'GET'])
+@login_required
 def events_overview():
-    return render_template("events-overview.html")
+    events = Event.query.filter_by(user_id=current_user.id).all()
+    return render_template("events-overview.html", events=events)
 
 # Flask route to render the add event form
 @app.route("/add-event-form")
@@ -126,6 +130,7 @@ def add_event_form():
 
 # Flask route to handle the form submission and add the event to the database
 @app.route("/add-event", methods=['GET', 'POST'])
+@login_required
 def add_event():
     if request.method == 'POST':
         event_title = request.form['eventTitle']
@@ -133,7 +138,7 @@ def add_event():
         event_description = request.form['eventDescription']
         event_budget = request.form['eventBudget']
 
-        new_event = Event(title=event_title, date=event_date_time, description=event_description, budget=event_budget)
+        new_event = Event(title=event_title, date=event_date_time, description=event_description, budget=event_budget, user_id=current_user.id)
         try:
             db.session.add(new_event)
             db.session.commit()
@@ -148,7 +153,7 @@ def add_event():
 @app.route("/event-dashboard")
 @login_required
 def event_dashboard():
-    events = Event.query.all()
+    events = Event.query.filter_by(user_id=current_user.id).all()
     return render_template("event-dashboard.html", events=events)
 
 @app.route('/expenses')
