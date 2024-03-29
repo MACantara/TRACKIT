@@ -5,3 +5,4 @@ datetime
 psycopg2-binary
 python-dotenv
 werkzeug
+flask_login
