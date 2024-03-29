@@ -1,3 +1,9 @@
+# TODO: Revamp the whole system from scratch
+# TODO: Add Log in & Register system
+# TODO: Secure the details from the log in system
+# TODO: Add a secure forget password mechanism
+# TODO: Connect the log in system to the database
+
 from flask import Flask, render_template, request, redirect, send_from_directory, make_response
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
@@ -88,7 +94,8 @@ def add_event():
 
 @app.route("/event-dashboard")
 def event_dashboard():
-    return render_template("event-dashboard.html")
+    events = Event.query.all()
+    return render_template("event-dashboard.html", events=events)
 
 @app.route('/expenses')
 def expenses():

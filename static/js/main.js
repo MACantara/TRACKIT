@@ -4,6 +4,7 @@ function showOffcanvas() {
     offcanvas.show();
 }
 
+// Chart JS
 const ctx = document.getElementById("myChart");
 const ctx1 = document.getElementById("myChart1");
 const ctx2 = document.getElementById("myChart2");
