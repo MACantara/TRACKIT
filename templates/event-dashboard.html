@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %} {{ events.title}} {% endblock %}
+{% block title %} {{ event.title }} {% endblock %}
 
 {% block body %}
 <div class="container-fluid h-100">
@@ -8,7 +8,7 @@
     {% include "event-sidebar.html" %}
     <main class="col-12 col-md-10">
       <div class="container">
-        <h1 class="text-center my-4">{{ events.title }}</h1>
+        <h1 class="text-center my-4">{{ event.title }}</h1>
         <div class="row g-3 mb-3 mt-3">
           <!-- First row: Three cards of equal widths -->
           <div class="col-12 col-lg-6 col-xl-4">
@@ -62,7 +62,7 @@
                 </tr>
               </thead>
               <tbody>
-                {% for transaction in events.transactions %}
+                {% for transaction in event.transactions %}
                 <tr>
                   <td>{{ transaction.id }}</td>
                   <td>{{ transaction.name }}</td>

@@ -5,19 +5,19 @@
                 Overview</a>
         </li>
         <li class="nav-item mb-5 mt-5 h5">
-            <a class="nav-link" href="{{ url_for('event_dashboard' )}}"><i class="bi bi-speedometer2"></i> Dashboard</a>
+            <a class="nav-link" href="{{ url_for('event_dashboard', id=event.id) }}"><i class="bi bi-speedometer2"></i> Dashboard</a>
         </li>
         <li class="nav-item mb-5 mt-5 h5">
-            <a class="nav-link" href="{{ url_for('expenses') }}"><i class="bi bi-cash-stack"></i> Expenses</a>
+            <a class="nav-link" href="{{ url_for('expenses', id=event.id) }}"><i class="bi bi-cash-stack"></i> Expenses</a>
         </li>
         <li class="nav-item mb-5 mt-5 h5">
-            <a class="nav-link" href="{{ url_for('income') }}"><i class="bi bi-cash"></i> Income</a>
+            <a class="nav-link" href="{{ url_for('income', id=event.id) }}"><i class="bi bi-cash"></i> Income</a>
         </li>
         <li class="nav-item mb-5 mt-5 h5">
-            <a class="nav-link" href="{{ url_for('transaction_history') }}"><i class="bi bi-journal-text"></i> Transaction History</a>
+            <a class="nav-link" href="{{ url_for('transaction_history', id=event.id) }}"><i class="bi bi-journal-text"></i> Transaction History</a>
         </li>
         <li class="nav-item mb-5 mt-5 h5">
-            <a class="nav-link" href="{{ url_for('report') }}"><i class="bi bi-file-earmark-text"></i> Report</a>
+            <a class="nav-link" href="{{ url_for('report', id=event.id) }}"><i class="bi bi-file-earmark-text"></i> Report</a>
         </li>
     </ul>
 </nav>

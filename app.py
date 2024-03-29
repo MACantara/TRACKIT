@@ -52,6 +52,14 @@ class User(UserMixin, db.Model):
     def get_id(self):
         return str(self.id)
     
+class Event(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(200), nullable=False)
+    date = db.Column(db.Date, nullable=False)
+    description = db.Column(db.Text, nullable=False)
+    budget = db.Column(db.Float, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+
 class Expense(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     expense_name = db.Column(db.String(200), nullable=False)
@@ -62,14 +70,6 @@ class Expense(db.Model):
 
     def __repr__(self):
         return '<Expense %r>' % self.id
-    
-class Event(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(200), nullable=False)
-    date = db.Column(db.Date, nullable=False)
-    description = db.Column(db.Text, nullable=False)
-    budget = db.Column(db.Float, nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
 @app.route('/')
 def index():
@@ -172,11 +172,11 @@ def delete_event(id):
     except:
         return 'There was an issue deleting that event'
 
-@app.route("/event-dashboard")
+@app.route("/event-dashboard/<int:id>")
 @login_required
-def event_dashboard():
-    events = Event.query.filter_by(user_id=current_user.id).all()
-    return render_template("event-dashboard.html", events=events)
+def event_dashboard(id):
+    event = Event.query.get_or_404(id)
+    return render_template("event-dashboard.html", event=event)
 
 @app.route('/expenses')
 def expenses():

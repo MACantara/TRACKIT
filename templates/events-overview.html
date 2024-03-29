@@ -21,7 +21,7 @@
                         <h6>{{ event.date }}</h6>
                         <p class="card-text">{{ event.description }}</p>
                         <p class="card-text">Budget: {{ event.budget }}</p>
-                        <a href="{{ url_for('event_dashboard', event_id=event.id) }}" class="btn btn-primary">View Event Details</a>
+                        <a href="{{ url_for('event_dashboard', id=event.id) }}" class="btn btn-primary">View Event Details</a>
                         <a href="{{ url_for('update_event', id=event.id) }}" class="btn btn-secondary">Update</a>
                         <a href="{{ url_for('delete_event', id=event.id) }}" class="btn btn-danger">Delete</a>
                     </div>
