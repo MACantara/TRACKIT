@@ -3,7 +3,8 @@
 # Secure the details from the log in system
 # Connect the log in system to the database
 # Connect the users to events that user created
-# TODO: Add ability to update and delete events
+# Add ability to update and delete events
+# Connect the details of the events based on the event id
 
 from flask import Flask, render_template, request, redirect, send_from_directory, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
@@ -50,15 +51,6 @@ class User(UserMixin, db.Model):
 
     def get_id(self):
         return str(self.id)
-
-class Todo(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    content = db.Column(db.String(200), nullable=False)
-    category = db.Column(db.String(50), nullable=False)
-    date_created = db.Column(db.DateTime, default=datetime.utcnow)
-
-    def __repr__(self):
-        return '<Task %r>' % self.id
     
 class Expense(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -202,24 +194,6 @@ def transaction_history():
 @app.route("/report")
 def report():
     return render_template("report.html")
-
-@app.route("/todo", methods=['POST', 'GET'])
-def todo():
-    if request.method == 'POST':
-        task_content = request.form["task"]
-        task_category = request.form["category"]
-        new_task = Todo(content=task_content, category=task_category)
-        
-        try:
-            db.session.add(new_task)
-            db.session.commit()
-            return redirect('/todo')
-        except:
-            return 'There was an issue adding your task'
-        
-    else: 
-        tasks = Todo.query.order_by(Todo.date_created).all()
-        return render_template('todo.html', tasks=tasks)
     
 @app.route("/add-expense", methods=['GET'])
 def add_expense():
