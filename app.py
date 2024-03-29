@@ -1,8 +1,8 @@
-# TODO: Revamp the whole system from scratch
-# TODO: Add Log in & Register system
-# TODO: Secure the details from the log in system
-# TODO: Add a secure forget password mechanism
-# TODO: Connect the log in system to the database
+# Revamp the whole system from scratch
+# Add Log in & Register system
+# Secure the details from the log in system
+# Connect the log in system to the database
+# TODO: Connect the users to events that user created
 
 from flask import Flask, render_template, request, redirect, send_from_directory, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
@@ -33,13 +33,21 @@ class User(db.Model):
     last_name = db.Column(db.String(64), index=True)
     email = db.Column(db.String(120), index=True, unique=True)
     username = db.Column(db.String(64), index=True, unique=True)
-    password_hash = db.Column(db.String(128))
+    password_hash = db.Column(db.String(256))
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
 
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
+
+    @property
+    def is_active(self):
+        # This should return True unless the user has been deactivated.
+        return True
+
+    def get_id(self):
+        return str(self.id)
 
 class Todo(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -82,7 +90,7 @@ def log_in():
         user = User.query.filter_by(email=request.form['email']).first()
         if user and check_password_hash(user.password_hash, request.form['password']):
             login_user(user)
-            return redirect(url_for('dashboard'))
+            return redirect(url_for("events_overview"))
         flash('Invalid username/password')
     return render_template('log-in.html')
 
@@ -109,8 +117,7 @@ def log_out():
 
 @app.route("/events-overview", methods=['POST', 'GET'])
 def events_overview():
-    events = Event.query.all()
-    return render_template("events-overview.html", events=events)
+    return render_template("events-overview.html")
 
 # Flask route to render the add event form
 @app.route("/add-event-form")
