@@ -1,8 +1,15 @@
 {
     "cSpell.words": [
+        "backref",
+        "creds",
         "dotenv",
+        "googleapiclient",
+        "MAILGUN",
         "pdfkit",
         "psycopg",
+        "pytz",
+        "sendgrid",
+        "SENDGRID",
         "sqlalchemy",
         "SQLALCHEMY",
         "TRACKIT",
