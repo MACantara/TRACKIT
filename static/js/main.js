@@ -12,7 +12,7 @@ const ctx3 = document.getElementById("myChart3");
 const ctx4 = document.getElementById("myChart4");
 
 // Calculate total income and total expenses
-let totalIncome = incomes.reduce((total, income) => total + income.amount, 0);
+let totalIncome = incomes.reduce((total, income) => total + income.total_amount, 0);
 let totalExpenses = expenses.reduce((total, expense) => total + expense.total_amount, 0);
 
 // Format as PHP currency
@@ -47,7 +47,7 @@ new Chart(ctx1, {
     datasets: [
       {
         label: "Income in PHP",
-        data: incomes.map(income => income.amount),
+        data: incomes.map(income => income.total_amount),
         borderWidth: 1,
       },
     ],
@@ -92,7 +92,7 @@ let groupedIncomes = incomes.reduce((acc, income) => {
   if (!acc[date]) {
     acc[date] = 0;
   }
-  acc[date] += income.amount;
+  acc[date] += income.total_amount;
   return acc;
 }, {});
 

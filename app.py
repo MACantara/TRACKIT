@@ -98,8 +98,9 @@ class Expense(db.Model):
 class Income(db.Model):
     income_id = db.Column(db.Integer, primary_key=True)
     income_name = db.Column(db.String(100), nullable=False)
-    amount = db.Column(db.Float, nullable=False)
-    price = db.Column(db.Float, nullable=False)
+    unit_amount = db.Column(db.Float, nullable=False)
+    price_per_unit = db.Column(db.Float, nullable=False)
+    total_amount = db.Column(db.Float, nullable=False)
     category = db.Column(db.String(100), nullable=False)
     date_created = db.Column(db.DateTime, default=datetime.utcnow)
     event_id = db.Column(db.Integer, db.ForeignKey('event.event_id'), nullable=False)
@@ -113,7 +114,7 @@ class Income(db.Model):
         date_created_manila = self.date_created.replace(tzinfo=timezone('UTC')).astimezone(manila)
         return {
             'income_name': self.income_name,
-            'amount': self.amount,
+            'total_amount': self.total_amount,
             'date_created': date_created_manila
             # Add any other fields you want to include
         }
@@ -252,7 +253,7 @@ def event_dashboard(event_id):
     daily_incomes = defaultdict(int)
     daily_expenses = defaultdict(int)
     for income in incomes:
-        daily_incomes[income['date_created'].date()] += income['amount']
+        daily_incomes[income['date_created'].date()] += income['total_amount']
     for expense in expenses:
         daily_expenses[expense['date_created'].date()] += expense['total_amount']
     
@@ -301,10 +302,11 @@ def add_income(event_id):
     event = Event.query.get_or_404(event_id)
     if request.method == 'POST':
         income_name = request.form["income-name"]
-        amount = request.form["amount"]
-        price = request.form["price"]
+        unit_amount = request.form["unit_amount"]
+        price_per_unit = request.form["price_per_unit"]
+        total_amount = request.form["total_amount"]
         category = request.form["category"]
-        new_income = Income(income_name=income_name, amount=amount, price=price, category=category, event_id=event.event_id)
+        new_income = Income(income_name=income_name, unit_amount=unit_amount, price_per_unit=price_per_unit, total_amount=total_amount, category=category, event_id=event.event_id)
 
         try:
             db.session.add(new_income)
