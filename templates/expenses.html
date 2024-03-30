@@ -28,7 +28,7 @@
                                 <tr>
                                     <td>{{ expense.expense_id }}</td>
                                     <td>{{ expense.expense_name }}</td>
-                                    <td>{{ expense.date_created.strftime('%B %d, %Y %I:%M %p') }}</td>
+                                    <td>{{ expense.date_created|localize|strftime }}</td>
                                     <td>{{ "{:,}".format(expense.amount) }}</td>
                                     <td>PHP {{ "{:,.2f}".format(expense.price) }}</td>
                                     <td>{{ expense.category }}</td>

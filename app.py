@@ -27,6 +27,9 @@ db = SQLAlchemy(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
 
+# Add strftime as a custom filter
+app.jinja_env.filters['strftime'] = lambda dt: dt.strftime('%m/%d/%Y')
+
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
@@ -114,6 +117,16 @@ class Income(db.Model):
 
     def __repr__(self):
         return f"Income('{self.income_name}', '{self.amount}', '{self.price}', '{self.category}')"
+
+@app.template_filter('localize')
+def localize(utc_dt):
+    return utc_dt.replace(tzinfo=timezone('UTC')).astimezone(timezone('Asia/Manila'))
+
+@app.template_filter('strftime')
+def _jinja2_filter_datetime(date, fmt=None):
+    native = date.replace(tzinfo=None)
+    format='%b %d, %Y %I:%M %p' if fmt is None else fmt
+    return native.strftime(format)
 
 @app.route('/')
 def index():
