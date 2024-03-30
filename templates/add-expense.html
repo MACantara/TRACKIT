@@ -47,5 +47,20 @@
         var time = hour + ':' + min;
         document.getElementById('time').value = time;
     }
+    // Get references to the input fields
+    let unitAmountField = document.getElementById('amount');
+    let pricePerUnitField = document.getElementById('price');
+    let totalAmountField = document.getElementById('total');
+
+    // Function to calculate and update total amount
+    function updateTotalAmount() {
+        let unitAmount = parseFloat(unitAmountField.value) || 0;
+        let pricePerUnit = parseFloat(pricePerUnitField.value) || 0;
+        totalAmountField.value = unitAmount * pricePerUnit;
+    }
+
+    // Add event listeners to the unit amount and price per unit fields
+    unitAmountField.addEventListener('input', updateTotalAmount);
+    pricePerUnitField.addEventListener('input', updateTotalAmount);
 </script>
 {% endblock %}
