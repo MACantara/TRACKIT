@@ -47,7 +47,7 @@ new Chart(ctx1, {
     datasets: [
       {
         label: "Income in PHP",
-        data: incomes.map(income => income.amount * 50),
+        data: incomes.map(income => income.amount),
         borderWidth: 1,
       },
     ],

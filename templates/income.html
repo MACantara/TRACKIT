@@ -29,8 +29,8 @@
                                     <td>{{ income.income_id }}</td>
                                     <td>{{ income.income_name }}</td>
                                     <td>{{ income.date_created.strftime('%B %d, %Y %I:%M %p') }}</td>
-                                    <td>{{ income.amount }}</td>
-                                    <td>{{ income.price }}</td>
+                                    <td>{{ "{:,}".format(income.amount) }}</td>
+                                    <td>PHP {{ "{:,.2f}".format(income.price) }}</td>
                                     <td>{{ income.category }}</td>
                                 </tr>
                                 {% endfor %}
