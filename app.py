@@ -87,7 +87,7 @@ class Expense(db.Model):
         date_created_manila = self.date_created.replace(tzinfo=timezone('UTC')).astimezone(manila)
         return {
             'expense_name': self.expense_name,
-            'amount': self.amount,
+            'amount': self.unit_amount,
             'date_created': date_created_manila
             # Add any other fields you want to include
         }

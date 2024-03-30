@@ -55,6 +55,7 @@
                   <th>Price Per Unit</th>
                   <th>Total Amount</th>
                   <th>Category</th>
+                  <th>Type</th>
                 </tr>
               </thead>
               <tbody>
@@ -65,7 +66,7 @@
                   <td>{{ transaction.date_created|localize|strftime }}</td>
                   <td>{{ "{:,}".format(transaction.unit_amount) }}</td>
                   <td>PHP {{ "{:,.2f}".format(transaction.price_per_unit) }}</td>
-                  <td>{{ "{:,}".format(transaction.total_amount) }}</td>
+                  <td>PHP {{ "{:,.2f}".format(transaction.unit_amount * transaction.price_per_unit) }}</td>
                   <td>{{ transaction.category }}</td>
                   <td>{{ transaction.transaction_type }}</td>
                 </tr>
