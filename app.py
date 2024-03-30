@@ -70,8 +70,8 @@ class Expense(db.Model):
     expense_id = db.Column(db.Integer, primary_key=True)
     expense_name = db.Column(db.String(200), nullable=False)
     date_created = db.Column(db.DateTime, default=datetime.utcnow)
-    amount = db.Column(db.Float, nullable=False)  # Changed from db.Integer to db.Float
-    price = db.Column(db.Float, nullable=False)  # Changed from db.Integer to db.Float
+    unit_amount = db.Column(db.Float, nullable=False)  # Changed from db.Integer to db.Float
+    price_per_unit = db.Column(db.Float, nullable=False)  # Changed from db.Integer to db.Float
     category = db.Column(db.String(50), nullable=False)
     event_id = db.Column(db.Integer, db.ForeignKey('event.event_id'), nullable=False)
 
@@ -95,8 +95,8 @@ class Expense(db.Model):
 class Income(db.Model):
     income_id = db.Column(db.Integer, primary_key=True)
     income_name = db.Column(db.String(100), nullable=False)
-    amount = db.Column(db.Float, nullable=False)
-    price = db.Column(db.Float, nullable=False)
+    unit_amount = db.Column(db.Float, nullable=False)
+    price_per_unit = db.Column(db.Float, nullable=False)
     category = db.Column(db.String(100), nullable=False)
     date_created = db.Column(db.DateTime, default=datetime.utcnow)
     event_id = db.Column(db.Integer, db.ForeignKey('event.event_id'), nullable=False)
