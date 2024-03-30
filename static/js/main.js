@@ -127,6 +127,5 @@ new Chart(ctx3, {
       }
     },
     responsive: true,
-    // maintainAspectRatio: false,
   }
 });
