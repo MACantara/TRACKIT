@@ -20,6 +20,7 @@
                                     <th>Date & Time</th>
                                     <th>Unit Amount</th>
                                     <th>Price Per Unit</th>
+                                    <th>Total Amount</th>
                                     <th>Category</th>
                                 </tr>
                             </thead>
@@ -31,6 +32,7 @@
                                     <td>{{ expense.date_created|localize|strftime }}</td>
                                     <td>{{ "{:,}".format(expense.unit_amount) }}</td>
                                     <td>PHP {{ "{:,.2f}".format(expense.price_per_unit) }}</td>
+                                    <td>PHP {{ "{:,.2f}".format(expense.total_amount) }}</td>
                                     <td>{{ expense.category }}</td>
                                 </tr>
                                 {% endfor %}
