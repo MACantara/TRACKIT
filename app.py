@@ -13,6 +13,7 @@ from datetime import datetime
 from psycopg2 import connect, Error
 from dotenv import load_dotenv
 from werkzeug.security import generate_password_hash, check_password_hash
+from collections import defaultdict
 import os
 import psycopg2
 
@@ -78,6 +79,7 @@ class Expense(db.Model):
         return {
             'expense_name': self.expense_name,
             'amount': self.amount,
+            'date_created': self.date_created
             # Add any other fields you want to include
         }
 
@@ -101,6 +103,7 @@ class Income(db.Model):
         return {
             'income_name': self.income_name,
             'amount': self.amount,
+            'date_created': self.date_created
             # Add any other fields you want to include
         }
 
@@ -223,7 +226,16 @@ def event_dashboard(event_id):
     # Convert incomes and expenses to lists of dictionaries
     incomes = [income.to_dict() for income in incomes]
     expenses = [expense.to_dict() for expense in expenses]
-    return render_template("event-dashboard.html", event=event, transactions=transactions, incomes=incomes, expenses=expenses, budget=event.budget)
+    
+    # Calculate daily totals for income and expenses
+    daily_incomes = defaultdict(int)
+    daily_expenses = defaultdict(int)
+    for income in incomes:
+        daily_incomes[income['date_created'].date()] += income['amount']
+    for expense in expenses:
+        daily_expenses[expense['date_created'].date()] += expense['amount']
+    
+    return render_template("event-dashboard.html", event=event, transactions=transactions, incomes=incomes, expenses=expenses, daily_incomes=daily_incomes, daily_expenses=daily_expenses, budget=event.budget)
 
 @app.route('/expenses/<int:event_id>')
 def expenses(event_id):

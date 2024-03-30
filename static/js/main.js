@@ -81,25 +81,33 @@ new Chart(ctx2, {
 
 const xValues = ["Day 1","Day 2","Day 3","Day 4","Day 5","Day 6","Day 7"];
 
+// Calculate daily totals for income and expenses
+let dailyIncomes = incomes.map(income => income.amount);
+let dailyExpenses = expenses.map(expense => expense.amount);
+
+// Calculate remaining budget for each day
+let dailyBudget = dailyIncomes.map((income, i) => budget -= dailyExpenses[i]);
+
+// Expenses, Income, Budget Line Chart
 new Chart(ctx3, {
   type: "line",
   data: {
     labels: xValues,
     datasets: [{
-      data: [2000, 2500, 3000, 3500, 4000, 4500, 5000].map(amount => amount * 50),
+      data: dailyExpenses,
       borderColor: "red",
       fill: false,
       label: "Expenses"
     },{
-      data: [1000, 2000, 3000, 4000, 5000, 6000, 7000].map(amount => amount * 50),
+      data: dailyIncomes,
       borderColor: "green",
       fill: false,
       label: "Income"
     },{
-      data: [15000, 13000, 11000, 9000, 7000, 5000, 3000].map(amount => amount * 50),
+      data: dailyBudget,
       borderColor: "blue",
       fill: false,
-      label: "Budget"
+      label: "Remaining Budget"
     }]
   },
   options: {
