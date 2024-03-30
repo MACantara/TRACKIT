@@ -86,11 +86,38 @@ let xValues = Array.from({length: 7}, (_, i) => {
 });
 
 // Calculate daily totals for income and expenses
-let dailyIncomes = incomes.map(income => income.amount);
-let dailyExpenses = expenses.map(expense => expense.amount);
+// Group incomes by date
+let groupedIncomes = incomes.reduce((acc, income) => {
+  let date = income.date;
+  if (!acc[date]) {
+    acc[date] = 0;
+  }
+  acc[date] += income.amount;
+  return acc;
+}, {});
+
+// Convert grouped incomes to array
+let dailyIncomes = Object.values(groupedIncomes);
+
+// Group expenses by date
+let groupedExpenses = expenses.reduce((acc, expense) => {
+  let date = expense.date;
+  if (!acc[date]) {
+    acc[date] = 0;
+  }
+  acc[date] += expense.amount;
+  return acc;
+}, {});
+
+// Convert grouped expenses to array
+let dailyExpenses = Object.values(groupedExpenses);
 
 // Calculate remaining budget for each day
-let dailyBudget = dailyIncomes.map((income, i) => budget -= dailyExpenses[i]);
+let dailyBudget = Object.keys(groupedExpenses).map(date => {
+  let expense = groupedExpenses[date] || 0;
+  budget -= expense;
+  return budget;
+});
 
 // Expenses, Income, Budget Line Chart
 new Chart(ctx3, {
