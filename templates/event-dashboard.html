@@ -51,10 +51,10 @@
                   <th>ID</th>
                   <th>Name</th>
                   <th>Date & Time</th>
-                  <th>Amount</th>
-                  <th>Price</th>
+                  <th>Unit Amount</th>
+                  <th>Price Per Unit</th>
+                  <th>Total Amount</th>
                   <th>Category</th>
-                  <th>Receipt/Invoice</th>
                 </tr>
               </thead>
               <tbody>
@@ -63,8 +63,9 @@
                   <td>{{ transaction.id }}</td>
                   <td>{{ transaction.name }}</td>
                   <td>{{ transaction.date_created|localize|strftime }}</td>
-                  <td>{{ "{:,}".format(transaction.amount) }}</td>
-                  <td>PHP {{ "{:,.2f}".format(transaction.price) }}</td>
+                  <td>{{ "{:,}".format(transaction.unit_amount) }}</td>
+                  <td>PHP {{ "{:,.2f}".format(transaction.price_per_unit) }}</td>
+                  <td>{{ "{:,}".format(transaction.total_amount) }}</td>
                   <td>{{ transaction.category }}</td>
                   <td>{{ transaction.transaction_type }}</td>
                 </tr>

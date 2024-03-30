@@ -7,3 +7,4 @@ python-dotenv
 werkzeug
 flask_login
 pytz
+flask-migrate

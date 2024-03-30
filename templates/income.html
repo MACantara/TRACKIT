@@ -18,8 +18,9 @@
                                     <th>ID</th>
                                     <th>Name</th>
                                     <th>Date & Time</th>
-                                    <th>Amount</th>
-                                    <th>Price</th>
+                                    <th>Unit Amount</th>
+                                    <th>Price Per Unit</th>
+                                    <th>Total Amount</th>
                                     <th>Category</th>
                                 </tr>
                             </thead>
@@ -29,8 +30,9 @@
                                     <td>{{ income.income_id }}</td>
                                     <td>{{ income.income_name }}</td>
                                     <td>{{ income.date_created|localize|strftime }}</td>
-                                    <td>{{ "{:,}".format(income.amount) }}</td>
-                                    <td>PHP {{ "{:,.2f}".format(income.price) }}</td>
+                                    <td>{{ "{:,}".format(income.unit_amount) }}</td>
+                                    <td>PHP {{ "{:,.2f}".format(income.price_per_unit) }}</td>
+                                    <td>{{ "{:,}".format(income.total_amount) }}</td>
                                     <td>{{ income.category }}</td>
                                 </tr>
                                 {% endfor %}

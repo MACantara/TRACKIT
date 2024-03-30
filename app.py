@@ -9,6 +9,7 @@
 from flask import Flask, render_template, request, redirect, send_from_directory, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, login_user, logout_user, current_user, login_required, UserMixin
+from flask_migrate import Migrate
 from datetime import datetime
 from pytz import timezone
 from psycopg2 import connect, Error
@@ -24,6 +25,7 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
 db = SQLAlchemy(app)
+migrate = Migrate(app, db)
 login_manager = LoginManager()
 login_manager.init_app(app)
 
