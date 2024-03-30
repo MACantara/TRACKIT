@@ -209,8 +209,9 @@ def reset_password(token):
     if request.method == 'POST':
         password = request.form['password']
         user = User.query.filter_by(email=email).first()
-        user.password = generate_password_hash(password)
+        user.password_hash = generate_password_hash(password)
         db.session.commit()
+        user = User.query.filter_by(email=email).first()  # Fetch the user again after the update
         flash('Your password has been updated!', 'success')
         return redirect(url_for('log_in'))
 
