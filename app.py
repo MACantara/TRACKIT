@@ -223,7 +223,7 @@ def event_dashboard(event_id):
     # Convert incomes and expenses to lists of dictionaries
     incomes = [income.to_dict() for income in incomes]
     expenses = [expense.to_dict() for expense in expenses]
-    return render_template("event-dashboard.html", event=event, transactions=transactions, incomes=incomes, expenses=expenses)
+    return render_template("event-dashboard.html", event=event, transactions=transactions, incomes=incomes, expenses=expenses, budget=event.budget)
 
 @app.route('/expenses/<int:event_id>')
 def expenses(event_id):

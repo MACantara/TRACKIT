@@ -58,21 +58,22 @@ new Chart(ctx1, {
 new Chart(ctx2, {
   type: "bar",
   data: {
-      labels: ["Initial Budget", "Final Expenditure", "Final Income"],
-      datasets: [
-          {
-              label: "Budget in PHP",
-              data: [15000, 13000, 15000].map(amount => amount * 50),
-              borderWidth: 1,
-          },
-      ],
+    labels: ["Budget", "Total Income", "Total Expenses"],
+    datasets: [
+      {
+        label: "Budget in PHP",
+        data: [budget, totalIncome, totalExpenses],
+        borderWidth: 1,
+        backgroundColor: ['blue', 'green', 'red'],  // Add this line
+      },
+    ],
   },
   options: {
-      scales: {
-          y: {
-              beginAtZero: true,
-          },
+    scales: {
+      y: {
+        beginAtZero: true,
       },
+    },
   },
 });
 
