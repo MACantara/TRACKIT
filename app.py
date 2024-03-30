@@ -1,9 +1,8 @@
-from flask import Flask, render_template, request, redirect, send_from_directory, url_for, flash
+from flask import Flask, render_template, request, redirect, send_from_directory, url_for, flash, send_file
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, login_user, logout_user, current_user, login_required, UserMixin
 from flask_migrate import Migrate
 from itsdangerous import URLSafeTimedSerializer
-from flask_mail import Mail, Message
 from datetime import datetime
 from pytz import timezone
 from psycopg2 import connect, Error
@@ -14,6 +13,9 @@ import os
 import psycopg2
 import smtplib
 from email.mime.text import MIMEText
+from reportlab.lib.pagesizes import letter
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle
+from reportlab.lib import colors
 
 load_dotenv()
 
@@ -382,6 +384,45 @@ def transaction_history(event_id):
         else:
             transaction.name = transaction.expense_name
     return render_template("transaction-history.html", event=event, transactions=transactions)
+
+@app.route('/generate-report/<int:event_id>', methods=['GET'])
+def generate_report(event_id):
+    event = Event.query.get_or_404(event_id)
+    incomes = Income.query.filter_by(event_id=event.event_id).all()
+    expenses = Expense.query.filter_by(event_id=event.event_id).all()
+    transactions = incomes + expenses
+    transactions.sort(key=lambda x: x.date_created, reverse=True)
+
+    data = [["ID", "Name", "Date & Time", "Unit Amount", "Price Per Unit", "Total Amount", "Category", "Type"]]
+    
+    for transaction in transactions:
+        if isinstance(transaction, Income):
+            transaction.name = transaction.income_name
+            transaction.type = "Income"
+        else:
+            transaction.name = transaction.expense_name
+            transaction.type = "Expense"
+        data.append([transaction.event_id, transaction.name, transaction.date_created, transaction.total_amount, transaction.price_per_unit, transaction.total_amount * transaction.price_per_unit, transaction.category, transaction.type])
+
+    pdf = SimpleDocTemplate("report.pdf", pagesize=letter)
+    table = Table(data)
+    table.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('FONTSIZE', (0, 0), (-1, 0), 14),
+
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+        ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+        ('GRID', (0,0), (-1,-1), 1, colors.black)
+    ]))
+    elems = []
+    elems.append(table)
+    pdf.build(elems)
+
+    return send_file('report.pdf', as_attachment=True)
 
 @app.route("/report/<int:event_id>")
 def report(event_id):

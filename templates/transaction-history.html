@@ -9,6 +9,10 @@
         <main class="col-12 col-md-10">
             <div class="container">
                 <h1 class="text-center my-4">Transaction History</h1>
+                <!-- Add this form to generate the report -->
+                <form action="{{ url_for('generate_report', event_id=event.event_id) }}" method="get">
+                    <button type="submit" class="btn btn-primary mb-3">Generate Report</button>
+                </form>
                 <div class="row g-3 mb-3">
                     <!-- Third row: Table-like container with a heading -->
                     <div class="table-responsive">
@@ -33,7 +37,8 @@
                                     <td>{{ transaction.date_created|localize|strftime }}</td>
                                     <td>{{ "{:,}".format(transaction.total_amount) }}</td>
                                     <td>PHP {{ "{:,.2f}".format(transaction.price_per_unit) }}</td>
-                                    <td>PHP {{ "{:,.2f}".format(transaction.total_amount * transaction.price_per_unit) }}</td>
+                                    <td>PHP {{ "{:,.2f}".format(transaction.total_amount * transaction.price_per_unit)
+                                        }}</td>
                                     <td>{{ transaction.category }}</td>
                                     <td>{{ transaction.transaction_type }}</td>
                                 </tr>
