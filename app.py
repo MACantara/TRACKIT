@@ -197,7 +197,16 @@ def delete_event(event_id):
 @login_required
 def event_dashboard(event_id):
     event = Event.query.get_or_404(event_id)
-    return render_template("event-dashboard.html", event=event)
+    incomes = Income.query.filter_by(event_id=event.event_id).all()
+    expenses = Expense.query.filter_by(event_id=event.event_id).all()
+    transactions = incomes + expenses
+    transactions.sort(key=lambda x: x.date_created, reverse=True)
+    for transaction in transactions:
+        if isinstance(transaction, Income):
+            transaction.name = transaction.income_name
+        else:
+            transaction.name = transaction.expense_name
+    return render_template("event-dashboard.html", event=event, transactions=transactions)
 
 @app.route('/expenses/<int:event_id>')
 def expenses(event_id):
