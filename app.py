@@ -87,7 +87,7 @@ class Expense(db.Model):
         date_created_manila = self.date_created.replace(tzinfo=timezone('UTC')).astimezone(manila)
         return {
             'expense_name': self.expense_name,
-            'amount': self.unit_amount,
+            'total_amount': self.total_amount,
             'date_created': date_created_manila
             # Add any other fields you want to include
         }
@@ -254,7 +254,7 @@ def event_dashboard(event_id):
     for income in incomes:
         daily_incomes[income['date_created'].date()] += income['amount']
     for expense in expenses:
-        daily_expenses[expense['date_created'].date()] += expense['amount']
+        daily_expenses[expense['date_created'].date()] += expense['total_amount']
     
     return render_template("event-dashboard.html", event=event, transactions=transactions, incomes=incomes, expenses=expenses, daily_incomes=daily_incomes, daily_expenses=daily_expenses, budget=event.budget)
 
@@ -274,11 +274,11 @@ def create_expense(event_id):
     event = Event.query.get_or_404(event_id)
     if request.method == 'POST':
         expense_name = request.form["expense-name"]
-        amount = request.form["amount"]
-        price = request.form["price"]
-        total = request.form["total"]
+        unit_amount = request.form["unit_amount"]
+        price_per_unit = request.form["price_per_unit"]
+        total_amount = request.form["total_amount"]
         category = request.form["category"]
-        new_expense = Expense(expense_name=expense_name, unit_amount=amount, price_per_unit=price, total_amount=total, category=category, event_id=event.event_id)  # Changed id to event_id
+        new_expense = Expense(expense_name=expense_name, unit_amount=unit_amount, price_per_unit=price_per_unit, total_amount=total_amount, category=category, event_id=event.event_id)  # Changed id to event_id
 
         try:
             db.session.add(new_expense)

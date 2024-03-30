@@ -13,12 +13,14 @@
             <input type="date" class="form-control" id="date" name="date">
             <label for="time" class="form-label">Time: </label>
             <input type="time" class="form-control" id="time" name="time">
-            <label for="amount" class="form-label">Unit Amount: </label>
-            <input type="text" class="form-control" id="amount" name="amount" placeholder="Enter expense amount">
-            <label for="price" class="form-label">Price Per Unit: </label>
-            <input type="text" class="form-control" id="price" name="price" placeholder="Enter expense price">
-            <label for="total" class="form-label">Total Amount: </label>
-            <input type="text" class="form-control" id="total" name="total">
+            <label for="unit_amount" class="form-label">Unit Amount: </label>
+            <input type="text" class="form-control" id="unit_amount" name="unit_amount" placeholder="Enter unit amount">
+
+            <label for="price_per_unit" class="form-label">Price Per Unit: </label>
+            <input type="text" class="form-control" id="price_per_unit" name="price_per_unit" placeholder="Enter price per unit">
+
+            <label for="total_amount" class="form-label">Total Amount: </label>
+            <input type="text" class="form-control" id="total_amount" name="total_amount" placeholder="Enter total amount">
             <label for="category" class="form-label">Category: </label>
             <input type="text" class="form-control" id="category" name="category" placeholder="Enter expense category">
         </div>
@@ -48,9 +50,9 @@
         document.getElementById('time').value = time;
     }
     // Get references to the input fields
-    let unitAmountField = document.getElementById('amount');
-    let pricePerUnitField = document.getElementById('price');
-    let totalAmountField = document.getElementById('total');
+    let unitAmountField = document.getElementById('unit_amount');
+    let pricePerUnitField = document.getElementById('price_per_unit');
+    let totalAmountField = document.getElementById('total_amount');
 
     // Function to calculate and update total amount
     function updateTotalAmount() {

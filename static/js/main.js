@@ -13,7 +13,7 @@ const ctx4 = document.getElementById("myChart4");
 
 // Calculate total income and total expenses
 let totalIncome = incomes.reduce((total, income) => total + income.amount, 0);
-let totalExpenses = expenses.reduce((total, expense) => total + expense.amount, 0);
+let totalExpenses = expenses.reduce((total, expense) => total + expense.total_amount, 0);
 
 // Format as PHP currency
 let formatter = new Intl.NumberFormat('en-PH', {
@@ -32,7 +32,7 @@ new Chart(ctx, {
     datasets: [
       {
         label: "Expenses in PHP",
-        data: expenses.map(expense => expense.amount),
+        data: expenses.map(expense => expense.total_amount),
         borderWidth: 1,
       },
     ],
@@ -105,7 +105,7 @@ let groupedExpenses = expenses.reduce((acc, expense) => {
   if (!acc[date]) {
     acc[date] = 0;
   }
-  acc[date] += expense.amount;
+  acc[date] += expense.total_amount;
   return acc;
 }, {});
 
