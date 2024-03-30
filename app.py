@@ -10,6 +10,7 @@ from flask import Flask, render_template, request, redirect, send_from_directory
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, login_user, logout_user, current_user, login_required, UserMixin
 from datetime import datetime
+from pytz import timezone
 from psycopg2 import connect, Error
 from dotenv import load_dotenv
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -76,10 +77,12 @@ class Expense(db.Model):
         return 'Expense'
 
     def to_dict(self):
+        manila = timezone('Asia/Manila')
+        date_created_manila = self.date_created.replace(tzinfo=timezone('UTC')).astimezone(manila)
         return {
             'expense_name': self.expense_name,
             'amount': self.amount,
-            'date_created': self.date_created
+            'date_created': date_created_manila
             # Add any other fields you want to include
         }
 
@@ -100,10 +103,12 @@ class Income(db.Model):
         return 'Income'
 
     def to_dict(self):
+        manila = timezone('Asia/Manila')
+        date_created_manila = self.date_created.replace(tzinfo=timezone('UTC')).astimezone(manila)
         return {
             'income_name': self.income_name,
             'amount': self.amount,
-            'date_created': self.date_created
+            'date_created': date_created_manila
             # Add any other fields you want to include
         }
 
