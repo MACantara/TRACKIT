@@ -32,7 +32,7 @@
                                     <td>{{ income.date_created|localize|strftime }}</td>
                                     <td>{{ "{:,}".format(income.unit_amount) }}</td>
                                     <td>PHP {{ "{:,.2f}".format(income.price_per_unit) }}</td>
-                                    <td>{{ "{:,}".format(income.total_amount) }}</td>
+                                    <td>PHP {{ "{:,.2f}".format(income.unit_amount * income.price_per_unit) }}</td>
                                     <td>{{ income.category }}</td>
                                 </tr>
                                 {% endfor %}
