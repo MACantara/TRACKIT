@@ -9,6 +9,10 @@
         <div class="mb-3">
             <label for="income-name" class="form-label">Income Name: </label>
             <input type="text" class="form-control" id="income-name" name="income-name" placeholder="Enter income name">
+            <label for="date" class="form-label">Date: </label>
+            <input type="date" class="form-control" id="date" name="date">
+            <label for="time" class="form-label">Time: </label>
+            <input type="time" class="form-control" id="time" name="time">
             <label for="amount" class="form-label">Amount: </label>
             <input type="text" class="form-control" id="amount" name="amount" placeholder="Enter income amount">
             <label for="price" class="form-label">Price: </label>
@@ -19,4 +23,26 @@
         <button type="submit" class="btn btn-primary">Add Income</button>
     </form>
 </div>
+<script>
+    window.onload = function() {
+        var now = new Date();
+        var month = (now.getMonth() + 1);               
+        var day = now.getDate();
+        if(month < 10) 
+            month = "0" + month;
+        if(day < 10) 
+            day = "0" + day;
+        var today = now.getFullYear() + '-' + month + '-' + day;
+        document.getElementById('date').value = today;
+
+        var hour = now.getHours();
+        var min = now.getMinutes();
+        if(hour < 10)
+            hour = "0" + hour;
+        if(min < 10)
+            min = "0" + min;
+        var time = hour + ':' + min;
+        document.getElementById('time').value = time;
+    }
+</script>
 {% endblock %}
