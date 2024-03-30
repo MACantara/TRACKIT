@@ -48,7 +48,6 @@
               <caption class="display-5">Transaction History</caption>
               <thead>
                 <tr>
-                  <th>ID</th>
                   <th>Name</th>
                   <th>Date & Time</th>
                   <th>Unit Amount</th>
@@ -61,7 +60,6 @@
               <tbody>
                 {% for transaction in transactions %}
                 <tr>
-                  <td>{{ transaction.id }}</td>
                   <td>{{ transaction.name }}</td>
                   <td>{{ transaction.date_created|localize|strftime }}</td>
                   <td>{{ "{:,}".format(transaction.unit_amount) }}</td>

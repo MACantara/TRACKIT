@@ -15,7 +15,6 @@
                         <table class="table">
                             <thead>
                                 <tr>
-                                    <th>ID</th>
                                     <th>Name</th>
                                     <th>Date & Time</th>
                                     <th>Unit Amount</th>
@@ -27,7 +26,6 @@
                             <tbody>
                                 {% for income in incomes %}
                                 <tr>
-                                    <td>{{ income.income_id }}</td>
                                     <td>{{ income.income_name }}</td>
                                     <td>{{ income.date_created|localize|strftime }}</td>
                                     <td>{{ "{:,}".format(income.unit_amount) }}</td>
