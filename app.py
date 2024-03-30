@@ -74,7 +74,6 @@ class Expense(db.Model):
     date_created = db.Column(db.DateTime, default=datetime.utcnow)
     unit_amount = db.Column(db.Float, nullable=False)  # Changed from db.Integer to db.Float
     price_per_unit = db.Column(db.Float, nullable=False)  # Changed from db.Integer to db.Float
-    total_amount = db.Column(db.Float, nullable=False)
     category = db.Column(db.String(50), nullable=False)
     event_id = db.Column(db.Integer, db.ForeignKey('event.event_id'), nullable=False)
 
@@ -98,9 +97,8 @@ class Expense(db.Model):
 class Income(db.Model):
     income_id = db.Column(db.Integer, primary_key=True)
     income_name = db.Column(db.String(100), nullable=False)
-    unit_amount = db.Column(db.Float, nullable=False)
-    price_per_unit = db.Column(db.Float, nullable=False)
-    total_amount = db.Column(db.Float, nullable=False)
+    amount = db.Column(db.Float, nullable=False)
+    price = db.Column(db.Float, nullable=False)
     category = db.Column(db.String(100), nullable=False)
     date_created = db.Column(db.DateTime, default=datetime.utcnow)
     event_id = db.Column(db.Integer, db.ForeignKey('event.event_id'), nullable=False)
@@ -277,9 +275,8 @@ def create_expense(event_id):
         expense_name = request.form["expense-name"]
         amount = request.form["amount"]
         price = request.form["price"]
-        total = request.form["total"]
         category = request.form["category"]
-        new_expense = Expense(expense_name=expense_name, unit_amount=amount, price_per_unit=price, total_amount=total, category=category, event_id=event.event_id)  # Changed id to event_id
+        new_expense = Expense(expense_name=expense_name, unit_amount=amount, price_per_unit=price, category=category, event_id=event.event_id)  # Changed id to event_id
 
         try:
             db.session.add(new_expense)
@@ -305,8 +302,7 @@ def add_income(event_id):
         amount = request.form["amount"]
         price = request.form["price"]
         category = request.form["category"]
-        total = request.form["total"]
-        new_income = Income(income_name=income_name, unit_amount=amount, price_per_unit=price, total_amount=total, category=category, event_id=event.event_id)
+        new_income = Income(income_name=income_name, amount=amount, price=price, category=category, event_id=event.event_id)
 
         try:
             db.session.add(new_income)
