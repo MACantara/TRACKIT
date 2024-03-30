@@ -5,7 +5,7 @@
 {% block body %}
 <div class="container mt-3">
     <h1 class="text-center">Add Income</h1>
-    <form action="{{ url_for('add_income', id=event.id) }}" method="post">
+    <form action="{{ url_for('add_income', event_id=event.event_id) }}" method="post">
         <div class="mb-3">
             <label for="income-name" class="form-label">Income Name: </label>
             <input type="text" class="form-control" id="income-name" name="income-name" placeholder="Enter income name">

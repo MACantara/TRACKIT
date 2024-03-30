@@ -26,7 +26,7 @@
                             <tbody>
                                 {% for income in incomes %}
                                 <tr>
-                                    <td>{{ income.id }}</td>
+                                    <td>{{ income.income_id }}</td>
                                     <td>{{ income.income_name }}</td>
                                     <td>{{ income.date_created.strftime('%B %d, %Y %I:%M %p') }}</td>
                                     <td>{{ income.amount }}</td>
@@ -37,7 +37,7 @@
                             </tbody>
                         </table>
                     </div>
-                    <a href="{{ url_for('add_income', id=event.id) }}" class="btn btn-primary">Add Income</a>
+                    <a href="{{ url_for('add_income', event_id=event.event_id) }}" class="btn btn-primary">Add Income</a>
                 </div>
             </div>
         </main>

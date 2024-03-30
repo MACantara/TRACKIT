@@ -5,7 +5,7 @@
 {% block body %}
 <div class="container mt-3">
     <h1 class="text-center">Update Event</h1>
-    <form action="/update-event/{{ event.id }}" method="post">
+    <form action="/update-event/{{ event.event_id }}" method="post">
         <div class="mb-3">
             <label for="eventTitle" class="form-label">Event Title:</label>
             <input type="text" class="form-control" id="eventTitle" name="eventTitle" value="{{ event.title }}">
