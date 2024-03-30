@@ -29,7 +29,7 @@
                                 <tr>
                                     <td>{{ transaction.id }}</td>
                                     <td>{{ transaction.name }}</td>
-                                    <td>{{ transaction.date_created.strftime('%B %d, %Y %I:%M %p') }}</td>
+                                    <td>{{ transaction.date_created|localize|strftime }}</td>
                                     <td>{{ "{:,}".format(transaction.amount) }}</td>
                                     <td>PHP {{ "{:,.2f}".format(transaction.price) }}</td>
                                     <td>{{ transaction.category }}</td>
