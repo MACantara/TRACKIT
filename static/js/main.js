@@ -11,47 +11,46 @@ const ctx2 = document.getElementById("myChart2");
 const ctx3 = document.getElementById("myChart3");
 const ctx4 = document.getElementById("myChart4");
 
-// Expenses Bar Chart
-new Chart(ctx, {
-    type: "bar",
-    data: {
-        labels: ["Food", "Decorations", "Guest Speakers", "Security", "Marketing", "Miscellaneous"],
-        datasets: [
-            {
-                label: "Expenses in PHP",
-                data: [5000, 2000, 3000, 1500, 2500, 1000].map(amount => amount * 50),
-                borderWidth: 1,
-            },
-        ],
-    },
-    options: {
-        scales: {
-            y: {
-                beginAtZero: true,
-            },
-        },
-    },
+// Calculate total income and total expenses
+let totalIncome = incomes.reduce((total, income) => total + income.amount, 0);
+let totalExpenses = expenses.reduce((total, expense) => total + expense.amount, 0);
+
+// Format as PHP currency
+let formatter = new Intl.NumberFormat('en-PH', {
+  style: 'currency',
+  currency: 'PHP',
 });
 
-// Income Bar Chart
-new Chart(ctx1, {
-  type: "bar",
+document.getElementById('totalIncome').textContent = formatter.format(totalIncome);
+document.getElementById('totalExpenses').textContent = formatter.format(totalExpenses);
+
+// Expenses Pie Chart
+new Chart(ctx, {
+  type: "pie",
   data: {
-      labels: ["Ticket Sales", "Sponsorships", "Merchandise", "Food & Beverage Sales"],
-      datasets: [
-          {
-              label: "Income in PHP",
-              data: [6000, 4000, 2000, 3000].map(amount => amount * 50),
-              borderWidth: 1,
-          },
-      ],
-  },
-  options: {
-      scales: {
-          y: {
-              beginAtZero: true,
-          },
+    labels: expenses.map(expense => expense.expense_name),
+    datasets: [
+      {
+        label: "Expenses in PHP",
+        data: expenses.map(expense => expense.amount),
+        borderWidth: 1,
       },
+    ],
+  },
+});
+
+// Income Pie Chart
+new Chart(ctx1, {
+  type: "pie",
+  data: {
+    labels: incomes.map(income => income.income_name),
+    datasets: [
+      {
+        label: "Income in PHP",
+        data: incomes.map(income => income.amount * 50),
+        borderWidth: 1,
+      },
+    ],
   },
 });
 
@@ -104,34 +103,5 @@ new Chart(ctx3, {
   },
   options: {
     legend: {display: true}
-  }
-});
-
-// Doughnut chart Categories
-
-var Values = ["Engineering", "Arts", "Science", "Business", "Law"];
-var Values2 = [200, 150, 180, 170, 100].map(amount => amount * 50);
-var barColors = [
-  "#b91d47",
-  "#00aba9",
-  "#2b5797",
-  "#e8c3b9",
-  "#1e7145"
-];
-
-new Chart(ctx4, {
-  type: "doughnut",
-  data: {
-    labels: Values,
-    datasets: [{
-      backgroundColor: barColors,
-      data: Values2
-    }]
-  },
-  options: {
-    title: {
-      display: true,
-      text: "Attendees by Faculty"
-    }
   }
 });

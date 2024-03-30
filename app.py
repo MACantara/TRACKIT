@@ -74,6 +74,13 @@ class Expense(db.Model):
     def transaction_type(self):
         return 'Expense'
 
+    def to_dict(self):
+        return {
+            'expense_name': self.expense_name,
+            'amount': self.amount,
+            # Add any other fields you want to include
+        }
+
     def __repr__(self):
         return '<Expense %r>' % self.expense_id
 
@@ -89,6 +96,13 @@ class Income(db.Model):
     @property
     def transaction_type(self):
         return 'Income'
+
+    def to_dict(self):
+        return {
+            'income_name': self.income_name,
+            'amount': self.amount,
+            # Add any other fields you want to include
+        }
 
     def __repr__(self):
         return f"Income('{self.income_name}', '{self.amount}', '{self.price}', '{self.category}')"
@@ -206,7 +220,10 @@ def event_dashboard(event_id):
             transaction.name = transaction.income_name
         else:
             transaction.name = transaction.expense_name
-    return render_template("event-dashboard.html", event=event, transactions=transactions)
+    # Convert incomes and expenses to lists of dictionaries
+    incomes = [income.to_dict() for income in incomes]
+    expenses = [expense.to_dict() for expense in expenses]
+    return render_template("event-dashboard.html", event=event, transactions=transactions, incomes=incomes, expenses=expenses)
 
 @app.route('/expenses/<int:event_id>')
 def expenses(event_id):
