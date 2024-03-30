@@ -1,15 +1,17 @@
+// Function to show offcanvas
 function showOffcanvas() {
-    let offcanvasElement = document.getElementById("offcanvasExample");
-    let offcanvas = new bootstrap.Offcanvas(offcanvasElement);
-    offcanvas.show();
+  let offcanvasElement = document.getElementById("offcanvasExample");
+  let offcanvas = new bootstrap.Offcanvas(offcanvasElement);
+  offcanvas.show();
 }
 
 // Chart JS
-const ctx = document.getElementById("myChart");
-const ctx1 = document.getElementById("myChart1");
-const ctx2 = document.getElementById("myChart2");
-const ctx3 = document.getElementById("myChart3");
-const ctx4 = document.getElementById("myChart4");
+const chartElements = {
+  expenses: document.getElementById("myChart"),
+  incomes: document.getElementById("myChart1"),
+  budget: document.getElementById("myChart2"),
+  lineChart: document.getElementById("myChart3")
+};
 
 // Calculate total income and total expenses
 let totalIncome = incomes.reduce((total, income) => total + income.amount, 0);
@@ -21,52 +23,47 @@ let formatter = new Intl.NumberFormat('en-PH', {
   currency: 'PHP',
 });
 
+// Set total income and total expenses text
 document.getElementById('totalIncome').textContent = formatter.format(totalIncome);
 document.getElementById('totalExpenses').textContent = formatter.format(totalExpenses);
 
-// Expenses Pie Chart
-new Chart(ctx, {
+// Create pie chart for expenses
+new Chart(chartElements.expenses, {
   type: "pie",
   data: {
     labels: expenses.map(expense => expense.expense_name),
-    datasets: [
-      {
-        label: "Expenses in PHP",
-        data: expenses.map(expense => expense.amount),
-        borderWidth: 1,
-      },
-    ],
+    datasets: [{
+      label: "Expenses in PHP",
+      data: expenses.map(expense => expense.amount),
+      borderWidth: 1,
+    }],
   },
 });
 
-// Income Pie Chart
-new Chart(ctx1, {
+// Create pie chart for incomes
+new Chart(chartElements.incomes, {
   type: "pie",
   data: {
     labels: incomes.map(income => income.income_name),
-    datasets: [
-      {
-        label: "Income in PHP",
-        data: incomes.map(income => income.amount),
-        borderWidth: 1,
-      },
-    ],
+    datasets: [{
+      label: "Income in PHP",
+      data: incomes.map(income => income.amount),
+      borderWidth: 1,
+    }],
   },
 });
 
-// Budget Bar Chart
-new Chart(ctx2, {
+// Create bar chart for budget
+new Chart(chartElements.budget, {
   type: "bar",
   data: {
     labels: ["Budget", "Total Income", "Total Expenses"],
-    datasets: [
-      {
-        label: "Budget in PHP",
-        data: [budget, totalIncome, totalExpenses],
-        borderWidth: 1,
-        backgroundColor: ['blue', 'green', 'red'],  // Add this line
-      },
-    ],
+    datasets: [{
+      label: "Budget in PHP",
+      data: [budget, totalIncome, totalExpenses],
+      borderWidth: 1,
+      backgroundColor: ['blue', 'green', 'red'],
+    }],
   },
   options: {
     scales: {
@@ -77,69 +74,34 @@ new Chart(ctx2, {
   },
 });
 
-// Expenses, Income, Budget Line Chart
-
+// Generate dates for the next 7 days
 let xValues = Array.from({length: 7}, (_, i) => {
   let d = new Date();
   d.setDate(d.getDate() + i);
   return `${d.getMonth()+1}/${d.getDate()}/${d.getFullYear()}`;
 });
 
-// Calculate daily totals for income and expenses
-// Group incomes by date
-let groupedIncomes = incomes.reduce((acc, income) => {
-  let date = income.date;
-  if (!acc[date]) {
-    acc[date] = 0;
-  }
-  acc[date] += income.amount;
-  return acc;
-}, {});
+// Group incomes and expenses by date
+let groupedIncomes = groupByDate(incomes);
+let groupedExpenses = groupByDate(expenses);
 
-// Convert grouped incomes to array
+// Convert grouped incomes and expenses to arrays
 let dailyIncomes = Object.values(groupedIncomes);
-
-// Group expenses by date
-let groupedExpenses = expenses.reduce((acc, expense) => {
-  let date = expense.date;
-  if (!acc[date]) {
-    acc[date] = 0;
-  }
-  acc[date] += expense.amount;
-  return acc;
-}, {});
-
-// Convert grouped expenses to array
 let dailyExpenses = Object.values(groupedExpenses);
 
 // Calculate remaining budget for each day
-let dailyBudget = Object.keys(groupedExpenses).map(date => {
-  let expense = groupedExpenses[date] || 0;
-  budget -= expense;
-  return budget;
-});
+let dailyBudget = calculateDailyBudget(groupedExpenses);
 
-// Expenses, Income, Budget Line Chart
-new Chart(ctx3, {
+// Create line chart for expenses, income, and remaining budget
+new Chart(chartElements.lineChart, {
   type: "line",
   data: {
     labels: xValues,
-    datasets: [{
-      data: dailyExpenses,
-      borderColor: "red",
-      fill: false,
-      label: "Expenses"
-    },{
-      data: dailyIncomes,
-      borderColor: "green",
-      fill: false,
-      label: "Income"
-    },{
-      data: dailyBudget,
-      borderColor: "blue",
-      fill: false,
-      label: "Remaining Budget"
-    }]
+    datasets: [
+      createDataset(dailyExpenses, "red", "Expenses"),
+      createDataset(dailyIncomes, "green", "Income"),
+      createDataset(dailyBudget, "blue", "Remaining Budget")
+    ]
   },
   options: {
     legend: {display: true},
@@ -156,3 +118,34 @@ new Chart(ctx3, {
     responsive: true,
   }
 });
+
+// Helper function to group amounts by date
+function groupByDate(items) {
+  return items.reduce((acc, item) => {
+    let date = item.date;
+    if (!acc[date]) {
+      acc[date] = 0;
+    }
+    acc[date] += item.amount;
+    return acc;
+  }, {});
+}
+
+// Helper function to calculate daily budget
+function calculateDailyBudget(groupedExpenses) {
+  return Object.keys(groupedExpenses).map(date => {
+    let expense = groupedExpenses[date] || 0;
+    budget -= expense;
+    return budget;
+  });
+}
+
+// Helper function to create dataset for line chart
+function createDataset(data, color, label) {
+  return {
+    data: data,
+    borderColor: color,
+    fill: false,
+    label: label
+  };
+}
