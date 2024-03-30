@@ -79,7 +79,11 @@ new Chart(ctx2, {
 
 // Expenses, Income, Budget Line Chart
 
-const xValues = ["Day 1","Day 2","Day 3","Day 4","Day 5","Day 6","Day 7"];
+let xValues = Array.from({length: 7}, (_, i) => {
+  let d = new Date();
+  d.setDate(d.getDate() + i);
+  return `${d.getMonth()+1}/${d.getDate()}/${d.getFullYear()}`;
+});
 
 // Calculate daily totals for income and expenses
 let dailyIncomes = incomes.map(income => income.amount);
@@ -111,6 +115,18 @@ new Chart(ctx3, {
     }]
   },
   options: {
-    legend: {display: true}
+    legend: {display: true},
+    scales: {
+      y: {
+        ticks: {
+          // Include a PHP sign in the ticks
+          callback: function(value, index, values) {
+            return 'PHP ' + value.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+          }
+        }
+      }
+    },
+    responsive: true,
+    // maintainAspectRatio: false,
   }
 });
