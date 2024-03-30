@@ -165,6 +165,10 @@ def sign_up():
         return redirect(url_for('log_in'))
     return render_template('sign-up.html')
 
+@app.route("/forgot-password")
+def forgot_password():
+    return render_template("forgot-password.html")
+
 @app.route("/logout")
 @login_required
 def log_out():
