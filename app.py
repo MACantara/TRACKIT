@@ -416,7 +416,8 @@ def generate_report(event_id):
 
         data.append([transaction.name, formatted_date, transaction.total_amount, transaction.price_per_unit, transaction.total_amount * transaction.price_per_unit, transaction.category, transaction.type])
 
-    pdf = SimpleDocTemplate("report.pdf", pagesize=letter)
+    filename = f"{event.title}-report.pdf"
+    pdf = SimpleDocTemplate(filename, pagesize=letter)
     table = Table(data)
     table.setStyle(TableStyle([
         ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
@@ -434,7 +435,7 @@ def generate_report(event_id):
     elems.append(table)
     pdf.build(elems)
 
-    return send_file('report.pdf', as_attachment=True)
+    return send_file(filename, as_attachment=True)
 
 @app.route("/report/<int:event_id>")
 def report(event_id):
