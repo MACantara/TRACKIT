@@ -9,7 +9,7 @@
     <form method="POST" action="{{ url_for('add_event') }}" enctype="multipart/form-data">
         <div class="mb-3">
             <label for="eventImage" class="form-label">Event Image</label>
-            <input type="file" class="form-control" id="eventImage" name="eventImage" required>
+            <input type="file" class="form-control" id="eventImage" name="eventImage" accept="image/*" required>
         </div>
         <div class="mb-3">
             <label for="eventTitle" class="form-label">Title of the event</label>
