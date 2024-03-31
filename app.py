@@ -94,6 +94,9 @@ class Event(db.Model):
     image_filename = db.Column(db.String(200), nullable=True)  # new field for image filename
     expenses = db.relationship('Expense', backref='event', lazy=True)
 
+    def formatted_date(self):
+        return datetime.strftime(self.date, "%B %d, %Y")
+
 class UserEvent(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'), primary_key=True)
     event_id = db.Column(db.Integer, db.ForeignKey('event.event_id'), primary_key=True)
