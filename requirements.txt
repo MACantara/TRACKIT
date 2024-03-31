@@ -10,3 +10,4 @@ pytz
 flask-migrate
 itsdangerous
 reportlab
+flask_uploads

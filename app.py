@@ -18,6 +18,7 @@ from pytz import timezone
 from psycopg2 import connect, Error
 from dotenv import load_dotenv
 from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.utils import secure_filename
 from collections import defaultdict
 
 # Import the reportlab modules for PDF generation
@@ -55,7 +56,7 @@ login_manager.init_app(app)
 # Add strftime as a custom filter
 app.jinja_env.filters['strftime'] = lambda dt: dt.strftime('%m/%d/%Y')
 
-
+app.config['UPLOAD_FOLDER'] = 'static/img'
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -90,6 +91,7 @@ class Event(db.Model):
     date = db.Column(db.Date, nullable=False)
     description = db.Column(db.Text, nullable=False)
     budget = db.Column(db.Float, nullable=False)
+    image_filename = db.Column(db.String(200), nullable=True)  # new field for image filename
     expenses = db.relationship('Expense', backref='event', lazy=True)
 
 class UserEvent(db.Model):
@@ -320,8 +322,15 @@ def add_event():
         event_date_time = datetime.strptime(request.form['eventDateTime'], '%Y-%m-%dT%H:%M')
         event_description = request.form['eventDescription']
         event_budget = request.form['eventBudget']
+        event_image = request.files['eventImage'] if 'eventImage' in request.files else None
 
-        new_event = Event(title=event_title, date=event_date_time, description=event_description, budget=event_budget)
+        if event_image:
+            filename = secure_filename(event_image.filename)
+            event_image.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        else:
+            filename = None
+
+        new_event = Event(title=event_title, date=event_date_time, description=event_description, budget=event_budget, image_filename=filename)
         try:
             current_user.events.append(new_event)
             db.session.commit()

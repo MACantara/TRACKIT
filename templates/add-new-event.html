@@ -6,7 +6,11 @@
 
 <section class="container">
     <h1 class="text-center my-4">Add New Event</h1>
-    <form method="POST" action="{{ url_for('add_event') }}">
+    <form method="POST" action="{{ url_for('add_event') }}" enctype="multipart/form-data">
+        <div class="mb-3">
+            <label for="eventImage" class="form-label">Event Image</label>
+            <input type="file" class="form-control" id="eventImage" name="eventImage">
+        </div>
         <div class="mb-3">
             <label for="eventTitle" class="form-label">Title of the event</label>
             <input type="text" class="form-control" id="eventTitle" name="eventTitle" placeholder="Enter event title"

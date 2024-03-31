@@ -15,7 +15,11 @@
             {% for event in events %}
             <div class="col-12 col-md-4">
                 <div class="card text-center">
+                    {% if event.image_filename %}
+                    <img src="{{ url_for('static', filename='img/' + event.image_filename) }}" alt="Event Image">
+                    {% else %}
                     <img src="https://via.placeholder.com/150" alt="Event Image">
+                    {% endif %}
                     <div class="card-body">
                         <h5 class="card-title">{{ event.title }}</h5>
                         <h6>{{ event.date }}</h6>
