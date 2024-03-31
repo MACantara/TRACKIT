@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block title %} Add Expense {% endblock %}
+
+{% block main %}
+<section class="container mt-3">
+    <h1 class="text-center">Add Expense</h1>
+    <form action="{{ url_for('create_expense', event_id=event.event_id) }}" method="post">
+        <div class="mb-3">
+            <label for="expense-name" class="form-label">Expense Name: </label>
+            <input type="text" class="form-control" id="expense-name" name="expense-name" placeholder="Enter expense name" required>
+            <label for="date" class="form-label">Date: </label>
+            <input type="date" class="form-control" id="date" name="date" required>
+            <label for="time" class="form-label">Time: </label>
+            <input type="time" class="form-control" id="time" name="time" required>
+            <label for="unit_amount" class="form-label">Unit Amount: </label>
+            <input type="number" class="form-control" id="unit_amount" name="unit_amount" placeholder="Enter unit amount" required min="1">
+            <label for="price_per_unit" class="form-label">Price Per Unit: </label>
+            <input type="number" class="form-control" id="price_per_unit" name="price_per_unit" placeholder="Enter price per unit" required min="0.01" step="0.01">
+            <label for="total_amount" class="form-label">Total Amount: </label>
+            <input type="text" class="form-control" id="total_amount" name="total_amount" placeholder="PHP 0.00" readonly>
+            <label for="category" class="form-label">Category: </label>
+            <input type="text" class="form-control" id="category" name="category" placeholder="Enter expense category" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Add Expense</button>
+    </form>
+</section>
+
+<script>
+    window.onload = function() {
+        var now = new Date();
+        var month = (now.getMonth() + 1);               
+        var day = now.getDate();
+        if(month < 10) 
+            month = "0" + month;
+        if(day < 10) 
+            day = "0" + day;
+        var today = now.getFullYear() + '-' + month + '-' + day;
+        document.getElementById('date').value = today;
+
+        var hour = now.getHours();
+        var min = now.getMinutes();
+        if(hour < 10)
+            hour = "0" + hour;
+        if(min < 10)
+            min = "0" + min;
+        var time = hour + ':' + min;
+        document.getElementById('time').value = time;
+    }
+    // Get references to the input fields
+    let unitAmountField = document.getElementById('unit_amount');
+    let pricePerUnitField = document.getElementById('price_per_unit');
+    let totalAmountField = document.getElementById('total_amount');
+
+    // Function to calculate and update total amount
+    function updateTotalAmount() {
+        let unitAmount = parseFloat(unitAmountField.value) || 0;
+        let pricePerUnit = parseFloat(pricePerUnitField.value) || 0;
+        totalAmountField.value = unitAmount * pricePerUnit;
+    }
+
+    // Add event listeners to the unit amount and price per unit fields
+    unitAmountField.addEventListener('input', updateTotalAmount);
+    pricePerUnitField.addEventListener('input', updateTotalAmount);
+</script>
+{% endblock %}
