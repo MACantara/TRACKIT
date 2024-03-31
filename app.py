@@ -177,7 +177,7 @@ def log_in():
         if user and check_password_hash(user.password_hash, request.form['password']):
             login_user(user)
             return redirect(url_for("events_overview"))
-        flash('Invalid username/password')
+        flash('Invalid username/password', 'danger')
     return render_template('log-in.html')
 
 @app.route("/sign-up", methods=['POST', 'GET'])
