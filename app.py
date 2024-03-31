@@ -85,10 +85,11 @@ class Expense(db.Model):
     def to_dict(self):
         manila = timezone('Asia/Manila')
         date_created_manila = self.date_created.replace(tzinfo=timezone('UTC')).astimezone(manila)
+        formatted_date = date_created_manila.strftime('%Y-%m-%d %I:%M %p')
         return {
             'expense_name': self.expense_name,
             'total_amount': self.total_amount,
-            'date_created': date_created_manila
+            'date_created': formatted_date
             # Add any other fields you want to include
         }
 
@@ -112,10 +113,11 @@ class Income(db.Model):
     def to_dict(self):
         manila = timezone('Asia/Manila')
         date_created_manila = self.date_created.replace(tzinfo=timezone('UTC')).astimezone(manila)
+        formatted_date = date_created_manila.strftime('%Y-%m-%d %I:%M %p')
         return {
             'income_name': self.income_name,
             'total_amount': self.total_amount,
-            'date_created': date_created_manila
+            'date_created': formatted_date
             # Add any other fields you want to include
         }
 
@@ -299,18 +301,23 @@ def event_dashboard(event_id):
             transaction.name = transaction.income_name
         else:
             transaction.name = transaction.expense_name
+
     # Convert incomes and expenses to lists of dictionaries
     incomes = [income.to_dict() for income in incomes]
     expenses = [expense.to_dict() for expense in expenses]
-    
+
     # Calculate daily totals for income and expenses
     daily_incomes = defaultdict(int)
     daily_expenses = defaultdict(int)
     for income in incomes:
-        daily_incomes[income['date_created'].date()] += income['total_amount']
+        date_created = datetime.strptime(income['date_created'], '%Y-%m-%d %I:%M %p')
+        date_created = date_created.date()
+        daily_incomes[date_created] += income['total_amount']
     for expense in expenses:
-        daily_expenses[expense['date_created'].date()] += expense['total_amount']
-    
+        date_created = datetime.strptime(expense['date_created'], '%Y-%m-%d %I:%M %p')
+        date_created = date_created.date()
+        daily_expenses[date_created] += expense['total_amount']
+
     return render_template("event-dashboard.html", event=event, transactions=transactions, incomes=incomes, expenses=expenses, daily_incomes=daily_incomes, daily_expenses=daily_expenses, budget=event.budget)
 
 @app.route('/expenses/<int:event_id>')
@@ -393,7 +400,7 @@ def generate_report(event_id):
     transactions = incomes + expenses
     transactions.sort(key=lambda x: x.date_created, reverse=True)
 
-    data = [["ID", "Name", "Date & Time", "Unit Amount", "Price Per Unit", "Total Amount", "Category", "Type"]]
+    data = [["Name", "Date & Time", "Unit Amount", "Price Per Unit", "Total Amount", "Category", "Type"]]
     
     for transaction in transactions:
         if isinstance(transaction, Income):
@@ -402,7 +409,12 @@ def generate_report(event_id):
         else:
             transaction.name = transaction.expense_name
             transaction.type = "Expense"
-        data.append([transaction.event_id, transaction.name, transaction.date_created, transaction.total_amount, transaction.price_per_unit, transaction.total_amount * transaction.price_per_unit, transaction.category, transaction.type])
+        
+        manila = timezone('Asia/Manila')
+        date_created_manila = transaction.date_created.replace(tzinfo=timezone('UTC')).astimezone(manila)
+        formatted_date = date_created_manila.strftime('%Y-%m-%d %I:%M %p')
+
+        data.append([transaction.name, formatted_date, transaction.total_amount, transaction.price_per_unit, transaction.total_amount * transaction.price_per_unit, transaction.category, transaction.type])
 
     pdf = SimpleDocTemplate("report.pdf", pagesize=letter)
     table = Table(data)
