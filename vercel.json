@@ -1,5 +1,9 @@
 {
   "rewrites": [
+<<<<<<< HEAD
     { "source": "/(.*)", "destination": "/app.py" }
+=======
+    { "source": "/(.*)", "destination": "/api/index" }
+>>>>>>> 2b492d61d7a49cab95826181008ea3983e1b789d
   ]
 }
