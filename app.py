@@ -14,8 +14,9 @@ import psycopg2
 import smtplib
 from email.mime.text import MIMEText
 from reportlab.lib.pagesizes import letter
-from reportlab.platypus import SimpleDocTemplate, Table, TableStyle
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph
 from reportlab.lib import colors
+from reportlab.lib.styles import getSampleStyleSheet
 
 load_dotenv()
 
@@ -422,6 +423,10 @@ def generate_report(event_id):
 
     filename = f"{event.title}-report.pdf"
     pdf = SimpleDocTemplate(filename, pagesize=letter)
+
+    styles = getSampleStyleSheet()
+    header = Paragraph(f"<h1>{event.title} - Generated Report</h1>", styles["Heading1"])
+
     table = Table(data)
     table.setStyle(TableStyle([
         ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
@@ -429,13 +434,13 @@ def generate_report(event_id):
 
         ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
         ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-        ('FONTSIZE', (0, 0), (-1, 0), 14),
+        ('FONTSIZE', (0, 0), (-1, 0), 10),
 
-        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
         ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
         ('GRID', (0,0), (-1,-1), 1, colors.black)
     ]))
     elems = []
+    elems.append(header)
     elems.append(table)
     pdf.build(elems)
 
