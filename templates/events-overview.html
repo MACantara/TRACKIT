@@ -29,11 +29,11 @@
                             ('event_dashboard', 'View', 'btn-primary', 'bi-eye-fill'),
                             ('update_event', 'Update', 'btn-outline-primary', 'bi-pencil-fill'),
                             ('delete_event', 'Delete', 'btn-danger', 'bi-trash-fill'),
-                            ('invite', 'Invite User', 'btn-info', 'bi-person-plus-fill')
+                            ('invite', 'Invite', 'btn-info', 'bi-person-plus-fill')
                         ] %}
                         {% for route, text, class, icon in buttons %}
                             <a href="{{ url_for(route, event_id=event.event_id) }}" class="btn {{ class }} mt-1">
-                                <i class="bi {{ icon }}"></i> {{ text }}
+                                <i class="bi {{ icon }}"></i> <span class="btn-text">{{ text }}</span>
                             </a>
                         {% endfor %}
                     </div>
