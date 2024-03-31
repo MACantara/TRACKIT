@@ -414,7 +414,11 @@ def generate_report(event_id):
         date_created_manila = transaction.date_created.replace(tzinfo=timezone('UTC')).astimezone(manila)
         formatted_date = date_created_manila.strftime('%Y-%m-%d %I:%M %p')
 
-        data.append([transaction.name, formatted_date, transaction.total_amount, transaction.price_per_unit, transaction.total_amount * transaction.price_per_unit, transaction.category, transaction.type])
+        formatted_unit_amount = '{:,}'.format(transaction.unit_amount)
+        formatted_price_per_unit = 'PHP {:,.2f}'.format(transaction.price_per_unit)
+        formatted_total_amount = 'PHP {:,.2f}'.format(transaction.total_amount * transaction.price_per_unit)
+
+        data.append([transaction.name, formatted_date, formatted_unit_amount, formatted_price_per_unit, formatted_total_amount, transaction.category, transaction.type])
 
     filename = f"{event.title}-report.pdf"
     pdf = SimpleDocTemplate(filename, pagesize=letter)
