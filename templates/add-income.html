@@ -2,7 +2,7 @@
 
 {% block title %} Add Income {% endblock %}
 
-{% block body %}
+{% block main %}
 <div class="container mt-3">
     <h1 class="text-center">Add Income</h1>
     <form action="{{ url_for('add_income', event_id=event.event_id) }}" method="post">
