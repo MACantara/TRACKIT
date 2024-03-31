@@ -37,7 +37,7 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 """The secret key for the Flask application."""
 
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DATABASE_URL')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('POSTGRES_URL')
 """The database URL for the Flask application."""
 
 db = SQLAlchemy(app)
