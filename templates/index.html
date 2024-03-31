@@ -3,7 +3,7 @@
 {% block title %} Home {% endblock %}
 
 {% block main %}
-<div class="container text-center">
+<section class="container text-center">
     <h1 class="display-1 my-5 fw-bold">TRACKIT</h1>
     <p class="lead display-4">Tracking Real-time Accounts,<br> Costs, and Keeping It Tidy</p>
     {% if current_user.is_authenticated %}
@@ -12,5 +12,5 @@
         <a href="{{ url_for('log_in')}}" class="btn btn-outline-primary btn-lg mt-5">Login</a>
         <a href="{{ url_for('sign_up')}}" class="btn btn-primary btn-lg mt-5">Create an Account</a>
     {% endif %}
-</div>
+</section>
 {% endblock %}

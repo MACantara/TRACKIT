@@ -3,7 +3,7 @@
 {% block title %} {{ event.title }} {% endblock %}
 
 {% block main %}
-<div class="container-fluid h-100">
+<section class="container-fluid h-100">
   <div class="row h-100">
     {% include "event-sidebar.html" %}
     <main class="col-12 col-md-10">
@@ -33,13 +33,13 @@
           </div>
         </div>
         <div class="row g-3 mb-3">
-            <!-- Second row: One card with full width -->
-            <div class="col-12">
-                <div class="card p-3">
-                    <h2>Expense, Income, Budget Graph in the Past 7 Days</h2>
-                    <canvas id="myChart3"></canvas>
-                </div>
+          <!-- Second row: One card with full width -->
+          <div class="col-12">
+            <div class="card p-3">
+              <h2>Expense, Income, Budget Graph in the Past 7 Days</h2>
+              <canvas id="myChart3"></canvas>
             </div>
+          </div>
         </div>
         <div class="row g-3 mb-3">
           <!-- Third row: Table-like container with a heading -->
@@ -76,10 +76,10 @@
       </div>
     </main>
   </div>
-</div>
+</section>
 <script type="text/javascript">
-  let incomes = {{ incomes|tojson }};
-  let expenses = {{ expenses|tojson }};
+  let incomes = {{ incomes| tojson }};
+  let expenses = {{ expenses| tojson }};
   let budget = {{ event.budget }};
 </script>
 {% endblock %}

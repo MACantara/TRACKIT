@@ -3,7 +3,7 @@
 {% block title %} Invite User {% endblock %}
 
 {% block main %}
-<div class="container mt-3">
+<section class="container mt-3">
     <h1 class="text-center">Invite User</h1>
     <form action="/invite/{{ event_id }}" method="post">
         <div class="mb-3">
@@ -12,5 +12,5 @@
         </div>
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>
-</div>
+</section>
 {% endblock %}

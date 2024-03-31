@@ -3,7 +3,7 @@
 {% block title %} Add Expense {% endblock %}
 
 {% block main %}
-<div class="container mt-3">
+<section class="container mt-3">
     <h1 class="text-center">Add Expense</h1>
     <form action="{{ url_for('create_expense', event_id=event.event_id) }}" method="post">
         <div class="mb-3">
@@ -24,7 +24,7 @@
         </div>
         <button type="submit" class="btn btn-primary">Add Expense</button>
     </form>
-</div>
+</section>
 
 <script>
     window.onload = function() {
