@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %} Invite User {% endblock %}
+
+{% block body %}
+<div class="container mt-3">
+    <h1 class="text-center">Invite User</h1>
+    <form action="/invite/{{ event_id }}" method="post">
+        <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input type="text" class="form-control" id="email" name="email">
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
+{% endblock %}

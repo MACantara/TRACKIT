@@ -44,7 +44,7 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(120), index=True, unique=True)
     username = db.Column(db.String(64), index=True, unique=True)
     password_hash = db.Column(db.String(256))
-    events = db.relationship('Event', backref='creator', lazy=True)
+    events = db.relationship('Event', secondary='user_event', backref=db.backref('users', lazy='dynamic'))
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -59,15 +59,18 @@ class User(UserMixin, db.Model):
 
     def get_id(self):
         return str(self.user_id)
-    
+
 class Event(db.Model):
     event_id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(200), nullable=False)
     date = db.Column(db.Date, nullable=False)
     description = db.Column(db.Text, nullable=False)
     budget = db.Column(db.Float, nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'), nullable=False)
     expenses = db.relationship('Expense', backref='event', lazy=True)
+
+class UserEvent(db.Model):
+    user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'), primary_key=True)
+    event_id = db.Column(db.Integer, db.ForeignKey('event.event_id'), primary_key=True)
 
 class Expense(db.Model):
     expense_id = db.Column(db.Integer, primary_key=True)
@@ -228,10 +231,56 @@ def log_out():
     logout_user()
     return redirect(url_for('index'))
 
+@app.route('/invite/<int:event_id>', methods=['GET', 'POST'])
+def invite(event_id):
+    if request.method == 'POST':
+        email = request.form.get('email')
+
+        # Find the user with the provided email
+        user = User.query.filter_by(email=email).first()
+
+        # If no user with that email exists, return an error
+        if user is None:
+            return 'No user with that email exists', 404
+
+        # Check if the user is already invited
+        user_event = UserEvent.query.filter_by(user_id=user.user_id, event_id=event_id).first()
+        if user_event is not None:
+            return 'User is already invited to this event', 400
+
+        # Create a new UserEvent record
+        user_event = UserEvent(user_id=user.user_id, event_id=event_id)
+        db.session.add(user_event)
+        db.session.commit()
+
+        # Get the event title
+        event = Event.query.get(event_id)
+        event_title = event.title if event else ''
+
+        # Redirect to the invitation confirmation page with the event title and user email
+        return redirect(url_for('invitation_confirmation', event_title=event_title, email=email))
+
+    # Render the invite user form
+    return render_template('invite-user.html', event_id=event_id)
+
+@app.route('/invitation-confirmation')
+def invitation_confirmation():
+    event_title = request.args.get('event_title', '')
+    email = request.args.get('email', '')
+    return render_template('invitation-confirmation.html', event_title=event_title, email=email)
+
 @app.route("/events-overview", methods=['POST', 'GET'])
 @login_required
 def events_overview():
-    events = Event.query.filter_by(user_id=current_user.user_id).all()
+    if request.method == 'POST':
+        user_id = request.json.get('user_id')
+        event_id = request.json.get('event_id')
+        user_event = UserEvent.query.filter_by(user_id=user_id, event_id=event_id).first()
+        if user_event is None:
+            return 'You do not have permission to manage this event', 403
+        # Continue with event management...
+
+    events = current_user.events
     return render_template("events-overview.html", events=events)
 
 # Flask route to render the add event form
@@ -248,15 +297,15 @@ def add_event():
         event_description = request.form['eventDescription']
         event_budget = request.form['eventBudget']
 
-        new_event = Event(title=event_title, date=event_date_time, description=event_description, budget=event_budget, user_id=current_user.user_id)
+        new_event = Event(title=event_title, date=event_date_time, description=event_description, budget=event_budget)
         try:
-            db.session.add(new_event)
+            current_user.events.append(new_event)
             db.session.commit()
             return redirect(url_for('event_dashboard', event_id=new_event.event_id))  # Redirect to the new event's dashboard
         except Exception as error:
             return f"Error while adding event to the database: {error}"
 
-    events = Event.query.all()
+    events = current_user.events
     return render_template("events-overview.html", events=events)
 
 @app.route('/update-event/<int:event_id>', methods=['GET', 'POST'])
