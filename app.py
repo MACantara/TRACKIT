@@ -1,6 +1,16 @@
-from flask import Flask, render_template, request, redirect, send_from_directory, url_for, flash, send_file
+"""
+Main application module for the TrackIT web application.
+
+This file sets up the Flask application and configures various parts of it.
+"""
+
+import os
+
+from flask import Flask, render_template, request, redirect, \
+    send_from_directory, url_for, flash, send_file
 from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager, login_user, logout_user, current_user, login_required, UserMixin
+from flask_login import LoginManager, login_user, logout_user, \
+    current_user, login_required, UserMixin
 from flask_migrate import Migrate
 from itsdangerous import URLSafeTimedSerializer
 from datetime import datetime
@@ -9,29 +19,43 @@ from psycopg2 import connect, Error
 from dotenv import load_dotenv
 from werkzeug.security import generate_password_hash, check_password_hash
 from collections import defaultdict
-import os
-import psycopg2
-import smtplib
-from email.mime.text import MIMEText
+
+# Import the reportlab modules for PDF generation
 from reportlab.lib.pagesizes import letter
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph
 from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet
 
+# Load environment variables from a .env file
 load_dotenv()
 
 app = Flask(__name__)
+"""The Flask application instance."""
 
+# Set up the application configuration
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
+"""The secret key for the Flask application."""
+
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
+"""The database URL for the Flask application."""
 
 db = SQLAlchemy(app)
+"""The SQLAlchemy instance for the Flask application."""
+
 migrate = Migrate(app, db)
+"""The Flask-Migrate instance for the Flask application."""
+
 login_manager = LoginManager()
+"""The Flask-Login instance for the Flask application."""
+
 login_manager.init_app(app)
+"""Initialize the Flask-Login instance for the Flask application."""
+
 
 # Add strftime as a custom filter
 app.jinja_env.filters['strftime'] = lambda dt: dt.strftime('%m/%d/%Y')
+
+
 
 @login_manager.user_loader
 def load_user(user_id):
