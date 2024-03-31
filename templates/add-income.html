@@ -8,19 +8,19 @@
     <form action="{{ url_for('add_income', event_id=event.event_id) }}" method="post">
         <div class="mb-3">
             <label for="income-name" class="form-label">Income Name: </label>
-            <input type="text" class="form-control" id="income-name" name="income-name" placeholder="Enter income name">
+            <input type="text" class="form-control" id="income-name" name="income-name" placeholder="Enter income name" required>
             <label for="date" class="form-label">Date: </label>
-            <input type="date" class="form-control" id="date" name="date">
+            <input type="date" class="form-control" id="date" name="date" required>
             <label for="time" class="form-label">Time: </label>
-            <input type="time" class="form-control" id="time" name="time">
+            <input type="time" class="form-control" id="time" name="time" required>
             <label for="unit_amount" class="form-label">Unit Amount: </label>
-            <input type="text" class="form-control" id="unit_amount" name="unit_amount" placeholder="Enter unit amount">
+            <input type="number" class="form-control" id="unit_amount" name="unit_amount" placeholder="Enter unit amount" required min="1">
             <label for="price_per_unit" class="form-label">Price Per Unit: </label>
-            <input type="text" class="form-control" id="price_per_unit" name="price_per_unit" placeholder="Enter price per unit">
+            <input type="number" class="form-control" id="price_per_unit" name="price_per_unit" placeholder="Enter price per unit" required min="0.01" step="0.01">
             <label for="total_amount" class="form-label">Total Amount: </label>
             <input type="text" class="form-control" id="total_amount" name="total_amount" placeholder="PHP 0.00" readonly>
             <label for="category" class="form-label">Category: </label>
-            <input type="text" class="form-control" id="category" name="category" placeholder="Enter income category">
+            <input type="text" class="form-control" id="category" name="category" placeholder="Enter income category" required>
         </div>
         <button type="submit" class="btn btn-primary">Add Income</button>
     </form>
