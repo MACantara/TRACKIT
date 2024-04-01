@@ -56,8 +56,6 @@ login_manager.init_app(app)
 # Add strftime as a custom filter
 app.jinja_env.filters['strftime'] = lambda dt: dt.strftime('%m/%d/%Y')
 
-app.config['UPLOAD_FOLDER'] = 'api/static/img/'
-
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
@@ -320,6 +318,7 @@ def add_event_form():
 @app.route("/add-event", methods=['GET', 'POST'])
 @login_required
 def add_event():
+    app.config['UPLOAD_FOLDER'] = '../static/img/'
     if request.method == 'POST':
         event_title = request.form['eventTitle']
         event_date_time = datetime.strptime(request.form['eventDateTime'], '%Y-%m-%dT%H:%M')
