@@ -56,7 +56,7 @@ login_manager.init_app(app)
 # Add strftime as a custom filter
 app.jinja_env.filters['strftime'] = lambda dt: dt.strftime('%m/%d/%Y')
 
-app.config['UPLOAD_FOLDER'] = 'static/img'
+app.config['UPLOAD_FOLDER'] = 'api/static/img/'
 
 @login_manager.user_loader
 def load_user(user_id):
