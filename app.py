@@ -19,6 +19,7 @@ from psycopg2 import connect, Error
 from dotenv import load_dotenv
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
+from werkzeug.wrappers import Response
 from collections import defaultdict
 
 # Import the reportlab modules for PDF generation
@@ -170,6 +171,16 @@ def _jinja2_filter_datetime(date, fmt=None):
 @app.route('/')
 def index():
     return render_template('index.html')
+
+def wsgi_to_bytes(data):
+    return data.__bytes__() if hasattr(data, '__bytes__') else bytes(data)
+
+def application(environ, start_response):
+    response = app(environ, start_response)
+    return [wsgi_to_bytes(data) for data in response]
+
+def lambda_handler(event, context):
+    return Response.from_app(app, event)()
 
 @app.route('/robot.txt')
 def serve_robot_txt():
