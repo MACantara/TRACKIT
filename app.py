@@ -21,6 +21,8 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 from werkzeug.wrappers import Response
 from collections import defaultdict
+from email.mime.text import MIMEText
+import smtplib
 
 # Import the reportlab modules for PDF generation
 from reportlab.lib.pagesizes import letter

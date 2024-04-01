@@ -10,3 +10,5 @@ pytz
 flask-migrate
 itsdangerous
 reportlab
+smtplib
+email
