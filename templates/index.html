@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - TRACKIT{% endblock %}
+
+{% block content %}
+<div class="mb-8">
+    <h2 class="text-3xl font-bold text-gray-800 mb-2">Dashboard</h2>
+    <p class="text-gray-600">Overview of your financial status</p>
+</div>
+
+<!-- Stats Cards -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    <!-- Total Balance -->
+    <div class="bg-white rounded-lg shadow-md p-6 card-hover">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-gray-500 text-sm mb-1">Total Balance</p>
+                <h3 class="text-2xl font-bold text-gray-800">${{ "%.2f"|format(total_balance) }}</h3>
+            </div>
+            <div class="bg-purple-100 rounded-full p-3">
+                <i class="bi bi-wallet2 text-2xl text-purple-600"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- Total Income -->
+    <div class="bg-white rounded-lg shadow-md p-6 card-hover">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-gray-500 text-sm mb-1">Total Income</p>
+                <h3 class="text-2xl font-bold text-green-600">${{ "%.2f"|format(total_income) }}</h3>
+            </div>
+            <div class="bg-green-100 rounded-full p-3">
+                <i class="bi bi-arrow-down-circle text-2xl text-green-600"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- Total Expenses -->
+    <div class="bg-white rounded-lg shadow-md p-6 card-hover">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-gray-500 text-sm mb-1">Total Expenses</p>
+                <h3 class="text-2xl font-bold text-red-600">${{ "%.2f"|format(total_expenses) }}</h3>
+            </div>
+            <div class="bg-red-100 rounded-full p-3">
+                <i class="bi bi-arrow-up-circle text-2xl text-red-600"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- Number of Accounts -->
+    <div class="bg-white rounded-lg shadow-md p-6 card-hover">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-gray-500 text-sm mb-1">Accounts</p>
+                <h3 class="text-2xl font-bold text-gray-800">{{ accounts|length }}</h3>
+            </div>
+            <div class="bg-blue-100 rounded-full p-3">
+                <i class="bi bi-bank text-2xl text-blue-600"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <!-- Accounts Overview -->
+    <div class="bg-white rounded-lg shadow-md p-6">
+        <div class="flex items-center justify-between mb-4">
+            <h3 class="text-xl font-bold text-gray-800">Your Accounts</h3>
+            <a href="{{ url_for('accounts') }}" class="text-purple-600 hover:text-purple-800 text-sm">View All <i class="bi bi-arrow-right"></i></a>
+        </div>
+        {% if accounts %}
+        <div class="space-y-3">
+            {% for account in accounts[:5] %}
+            <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                <div class="flex items-center space-x-3">
+                    <div class="bg-purple-100 rounded-full p-2">
+                        <i class="bi bi-wallet text-purple-600"></i>
+                    </div>
+                    <div>
+                        <p class="font-semibold text-gray-800">{{ account.name }}</p>
+                        <p class="text-sm text-gray-500">{{ account.type }}</p>
+                    </div>
+                </div>
+                <p class="font-bold text-gray-800">${{ "%.2f"|format(account.balance) }}</p>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p class="text-gray-500 text-center py-8">No accounts yet. Create your first account!</p>
+        {% endif %}
+    </div>
+
+    <!-- Recent Transactions -->
+    <div class="bg-white rounded-lg shadow-md p-6">
+        <div class="flex items-center justify-between mb-4">
+            <h3 class="text-xl font-bold text-gray-800">Recent Transactions</h3>
+            <a href="{{ url_for('transactions') }}" class="text-purple-600 hover:text-purple-800 text-sm">View All <i class="bi bi-arrow-right"></i></a>
+        </div>
+        {% if recent_transactions %}
+        <div class="space-y-3">
+            {% for transaction in recent_transactions[:5] %}
+            <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                <div class="flex items-center space-x-3">
+                    <div class="{% if transaction.type == 'income' %}bg-green-100{% else %}bg-red-100{% endif %} rounded-full p-2">
+                        <i class="bi {% if transaction.type == 'income' %}bi-arrow-down text-green-600{% else %}bi-arrow-up text-red-600{% endif %}"></i>
+                    </div>
+                    <div>
+                        <p class="font-semibold text-gray-800">{{ transaction.description }}</p>
+                        <p class="text-sm text-gray-500">{{ transaction.category }}</p>
+                    </div>
+                </div>
+                <p class="font-bold {% if transaction.type == 'income' %}text-green-600{% else %}text-red-600{% endif %}">
+                    {% if transaction.type == 'income' %}+{% else %}-{% endif %}${{ "%.2f"|format(transaction.amount) }}
+                </p>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p class="text-gray-500 text-center py-8">No transactions yet. Add your first transaction!</p>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Budget Overview -->
+{% if budgets %}
+<div class="bg-white rounded-lg shadow-md p-6 mt-6">
+    <div class="flex items-center justify-between mb-4">
+        <h3 class="text-xl font-bold text-gray-800">Budget Status</h3>
+        <a href="{{ url_for('budgets') }}" class="text-purple-600 hover:text-purple-800 text-sm">Manage Budgets <i class="bi bi-arrow-right"></i></a>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {% for budget in budgets %}
+        <div class="p-4 bg-gray-50 rounded-lg">
+            <div class="flex justify-between items-center mb-2">
+                <p class="font-semibold text-gray-800">{{ budget.category }}</p>
+                <p class="text-sm text-gray-600">${{ "%.2f"|format(budget.spent) }} / ${{ "%.2f"|format(budget.limit) }}</p>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-2.5">
+                {% set percentage = (budget.spent / budget.limit * 100) if budget.limit > 0 else 0 %}
+                <div class="budget-progress h-2.5 rounded-full {% if percentage >= 100 %}bg-red-600{% elif percentage >= 80 %}bg-yellow-500{% else %}bg-green-600{% endif %}" 
+                     style="width: {{ [percentage, 100]|min }}%"></div>
+            </div>
+            <p class="text-xs text-gray-500 mt-1">{{ "%.0f"|format(percentage) }}% used</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+{% endblock %}

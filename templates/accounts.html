@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+
+{% block title %}Accounts - TRACKIT{% endblock %}
+
+{% block content %}
+<div class="mb-8">
+    <div class="flex items-center justify-between">
+        <div>
+            <h2 class="text-3xl font-bold text-gray-800 mb-2">Accounts</h2>
+            <p class="text-gray-600">Manage your financial accounts</p>
+        </div>
+        <button onclick="openAddAccountModal()" class="bg-purple-600 hover:bg-purple-700 text-white font-semibold px-6 py-3 rounded-lg transition flex items-center space-x-2">
+            <i class="bi bi-plus-circle"></i>
+            <span>Add Account</span>
+        </button>
+    </div>
+</div>
+
+<!-- Accounts Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    {% for account in accounts %}
+    <div class="bg-white rounded-lg shadow-md p-6 card-hover">
+        <div class="flex items-start justify-between mb-4">
+            <div class="bg-purple-100 rounded-full p-3">
+                <i class="bi bi-wallet2 text-2xl text-purple-600"></i>
+            </div>
+            <button onclick="deleteAccount({{ account.id }})" class="text-red-500 hover:text-red-700">
+                <i class="bi bi-trash"></i>
+            </button>
+        </div>
+        <h3 class="text-xl font-bold text-gray-800 mb-1">{{ account.name }}</h3>
+        <p class="text-sm text-gray-500 mb-3">{{ account.type }}</p>
+        <p class="text-2xl font-bold text-purple-600">${{ "%.2f"|format(account.balance) }}</p>
+        <p class="text-xs text-gray-400 mt-2">Created: {{ account.created_at.strftime('%Y-%m-%d') }}</p>
+    </div>
+    {% else %}
+    <div class="col-span-full text-center py-12">
+        <i class="bi bi-wallet2 text-6xl text-gray-300 mb-4"></i>
+        <p class="text-gray-500 text-lg">No accounts yet. Click "Add Account" to get started!</p>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- Add Account Modal -->
+<div id="addAccountModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+    <div class="bg-white rounded-lg p-8 max-w-md w-full mx-4">
+        <div class="flex items-center justify-between mb-6">
+            <h3 class="text-2xl font-bold text-gray-800">Add New Account</h3>
+            <button onclick="closeAddAccountModal()" class="text-gray-500 hover:text-gray-700">
+                <i class="bi bi-x-lg text-2xl"></i>
+            </button>
+        </div>
+        <form action="{{ url_for('add_account') }}" method="POST">
+            <div class="mb-4">
+                <label class="block text-gray-700 font-semibold mb-2">Account Name</label>
+                <input type="text" name="name" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600" placeholder="e.g., Main Checking">
+            </div>
+            <div class="mb-4">
+                <label class="block text-gray-700 font-semibold mb-2">Account Type</label>
+                <select name="type" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600">
+                    <option value="">Select type...</option>
+                    <option value="Checking">Checking</option>
+                    <option value="Savings">Savings</option>
+                    <option value="Credit Card">Credit Card</option>
+                    <option value="Investment">Investment</option>
+                    <option value="Cash">Cash</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+            <div class="mb-6">
+                <label class="block text-gray-700 font-semibold mb-2">Initial Balance</label>
+                <input type="number" name="balance" step="0.01" value="0" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600" placeholder="0.00">
+            </div>
+            <div class="flex space-x-3">
+                <button type="submit" class="flex-1 bg-purple-600 hover:bg-purple-700 text-white font-semibold px-6 py-3 rounded-lg transition">
+                    Add Account
+                </button>
+                <button type="button" onclick="closeAddAccountModal()" class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold px-6 py-3 rounded-lg transition">
+                    Cancel
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function openAddAccountModal() {
+        document.getElementById('addAccountModal').classList.remove('hidden');
+        document.getElementById('addAccountModal').classList.add('flex');
+    }
+
+    function closeAddAccountModal() {
+        document.getElementById('addAccountModal').classList.add('hidden');
+        document.getElementById('addAccountModal').classList.remove('flex');
+    }
+
+    function deleteAccount(id) {
+        if (confirm('Are you sure you want to delete this account? All associated transactions will be deleted.')) {
+            window.location.href = `/account/delete/${id}`;
+        }
+    }
+
+    // Close modal on outside click
+    document.getElementById('addAccountModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeAddAccountModal();
+        }
+    });
+
+    // Close modal on Escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeAddAccountModal();
+        }
+    });
+</script>
+{% endblock %}
