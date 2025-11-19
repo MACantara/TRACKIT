@@ -17,7 +17,7 @@ A responsive Progressive Web App (PWA) built with Flask for managing personal fi
 ## 🛠️ Tech Stack
 
 - **Backend**: Python, Flask, SQLAlchemy
-- **Database**: SQLite
+- **Database**: Supabase PostgreSQL (production) / SQLite (local dev)
 - **Frontend**: HTML, Tailwind CSS v4, Bootstrap Icons
 - **PWA**: Service Worker, Web Manifest
 
@@ -45,12 +45,23 @@ A responsive Progressive Web App (PWA) built with Flask for managing personal fi
    pip install -r requirements.txt
    ```
 
-5. **Run the application**
+5. **Configure database (choose one)**
+
+   **Option A: SQLite (Quick Start)**
+   - No setup needed! App will use SQLite by default
+   - Perfect for local development and testing
+
+   **Option B: Supabase PostgreSQL (Production)**
+   - See [SUPABASE_SETUP.md](SUPABASE_SETUP.md) for detailed instructions
+   - Copy `.env.example` to `.env` and add your Supabase credentials
+   - Run `supabase_schema.sql` in Supabase SQL Editor
+
+6. **Run the application**
    ```bash
    python app.py
    ```
 
-6. **Access the app**
+7. **Access the app**
    - Open your browser to `http://localhost:5000`
 
 ### Seed Sample Data (Optional)
@@ -86,27 +97,24 @@ This creates sample accounts, transactions, and budgets for testing.
 
 ### Important Notes for Vercel
 
-⚠️ **Database Limitation**: Vercel's serverless functions are stateless, so SQLite database will reset on each deployment. For production:
+✅ **Supabase PostgreSQL Integration**: The app now supports Supabase PostgreSQL for production deployments!
 
-**Option 1: Use PostgreSQL (Recommended)**
-- Add `psycopg2-binary` to `requirements.txt`
-- Update database URI in `app.py`:
-  ```python
-  app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
-  ```
-- Add PostgreSQL database (Vercel Postgres, Neon, Supabase, etc.)
+**Setup Steps:**
+1. Create a Supabase project and run `supabase_schema.sql`
+2. Get your credentials from Supabase dashboard
+3. Add environment variables to Vercel (see below)
 
-**Option 2: Use Vercel KV/Storage**
-- Migrate to Vercel KV for persistence
-- Requires code refactoring
-
-**Option 3: External Database**
-- Use Railway, PlanetScale, or MongoDB Atlas
-- Update connection string in environment variables
+For detailed instructions, see [SUPABASE_SETUP.md](SUPABASE_SETUP.md)
 
 ### Environment Variables
 
 Add to Vercel project settings:
+```
+SUPABASE_URL=https://xxxxx.supabase.co
+SUPABASE_KEY=your-anon-key-here
+DATABASE_URL=postgresql://postgres:password@db.xxxxx.supabase.co:5432/postgres
+SECRET_KEY=your-secure-random-key-here
+```
 ```
 SECRET_KEY=your-secure-random-key-here
 DATABASE_URL=postgresql://...  # If using PostgreSQL
@@ -129,8 +137,12 @@ DATABASE_URL=postgresql://...  # If using PostgreSQL
 ```
 TRACKIT/
 ├── app.py                 # Main Flask application
+├── database.py            # Supabase/PostgreSQL integration
 ├── requirements.txt       # Python dependencies
 ├── vercel.json           # Vercel deployment config
+├── supabase_schema.sql   # Database schema for Supabase
+├── .env.example          # Environment variables template
+├── SUPABASE_SETUP.md     # Detailed Supabase setup guide
 ├── templates/            # HTML templates
 │   ├── base.html        # Base layout with PWA support
 │   ├── index.html       # Dashboard
