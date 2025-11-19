@@ -1,56 +1,36 @@
 from flask import Flask, render_template, request, redirect, url_for, jsonify, flash, send_from_directory
-from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 import os
+from dotenv import load_dotenv
+from database import is_configured, AccountDB, TransactionDB, BudgetDB
+from helpers import format_date
+
+# Load environment variables
+load_dotenv()
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'your-secret-key-here'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///trackit.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'your-secret-key-here-change-in-production')
 
-db = SQLAlchemy(app)
+# Add custom Jinja2 filters
+app.jinja_env.filters['format_date'] = format_date
 
-# Database Models
-class Account(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
-    type = db.Column(db.String(50), nullable=False)
-    balance = db.Column(db.Float, default=0.0)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    transactions = db.relationship('Transaction', backref='account', lazy=True, cascade='all, delete-orphan')
-
-class Transaction(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    account_id = db.Column(db.Integer, db.ForeignKey('account.id'), nullable=False)
-    description = db.Column(db.String(200), nullable=False)
-    amount = db.Column(db.Float, nullable=False)
-    category = db.Column(db.String(50), nullable=False)
-    date = db.Column(db.DateTime, default=datetime.utcnow)
-    type = db.Column(db.String(20), nullable=False)  # 'income' or 'expense'
-
-class Budget(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    category = db.Column(db.String(50), nullable=False, unique=True)
-    limit = db.Column(db.Float, nullable=False)
-    spent = db.Column(db.Float, default=0.0)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-
-# Create tables
-with app.app_context():
-    db.create_all()
+# Check database connection
+if not is_configured():
+    print("⚠ WARNING: Supabase not configured! Set SUPABASE_URL and SUPABASE_KEY in .env")
+    print("⚠ The app will not function without a database connection.")
 
 # Routes
 @app.route('/')
 def index():
-    accounts = Account.query.all()
-    total_balance = sum(account.balance for account in accounts)
-    recent_transactions = Transaction.query.order_by(Transaction.date.desc()).limit(10).all()
-    budgets = Budget.query.all()
+    accounts = AccountDB.get_all()
+    total_balance = sum(float(account.get('balance', 0)) for account in accounts)
+    recent_transactions = TransactionDB.get_recent(10)
+    budgets = BudgetDB.get_all()
     
     # Calculate total income and expenses
-    transactions = Transaction.query.all()
-    total_income = sum(t.amount for t in transactions if t.type == 'income')
-    total_expenses = sum(t.amount for t in transactions if t.type == 'expense')
+    all_transactions = TransactionDB.get_all()
+    total_income = sum(float(t.get('amount', 0)) for t in all_transactions if t.get('type') == 'income')
+    total_expenses = sum(float(t.get('amount', 0)) for t in all_transactions if t.get('type') == 'expense')
     
     return render_template('index.html', 
                          accounts=accounts, 
@@ -62,8 +42,8 @@ def index():
 
 @app.route('/accounts')
 def accounts():
-    accounts = Account.query.all()
-    return render_template('accounts.html', accounts=accounts)
+    accounts_list = AccountDB.get_all()
+    return render_template('accounts.html', accounts=accounts_list)
 
 @app.route('/account/add', methods=['POST'])
 def add_account():
@@ -71,26 +51,21 @@ def add_account():
     account_type = request.form.get('type')
     balance = float(request.form.get('balance', 0))
     
-    new_account = Account(name=name, type=account_type, balance=balance)
-    db.session.add(new_account)
-    db.session.commit()
-    
+    AccountDB.create(name, account_type, balance)
     flash('Account added successfully!', 'success')
     return redirect(url_for('accounts'))
 
 @app.route('/account/delete/<int:id>')
 def delete_account(id):
-    account = Account.query.get_or_404(id)
-    db.session.delete(account)
-    db.session.commit()
+    AccountDB.delete(id)
     flash('Account deleted successfully!', 'success')
     return redirect(url_for('accounts'))
 
 @app.route('/transactions')
 def transactions():
-    transactions = Transaction.query.order_by(Transaction.date.desc()).all()
-    accounts = Account.query.all()
-    return render_template('transactions.html', transactions=transactions, accounts=accounts)
+    transactions_list = TransactionDB.get_all()
+    accounts_list = AccountDB.get_all()
+    return render_template('transactions.html', transactions=transactions_list, accounts=accounts_list)
 
 @app.route('/transaction/add', methods=['POST'])
 def add_transaction():
@@ -100,92 +75,98 @@ def add_transaction():
     category = request.form.get('category')
     trans_type = request.form.get('type')
     
-    new_transaction = Transaction(
-        account_id=account_id,
-        description=description,
-        amount=amount,
-        category=category,
-        type=trans_type
-    )
+    # Create transaction
+    TransactionDB.create(account_id, description, amount, category, trans_type)
     
     # Update account balance
-    account = Account.query.get(account_id)
-    if trans_type == 'income':
-        account.balance += amount
-    else:
-        account.balance -= amount
-        # Update budget spent
-        budget = Budget.query.filter_by(category=category).first()
-        if budget:
-            budget.spent += amount
-    
-    db.session.add(new_transaction)
-    db.session.commit()
+    account = AccountDB.get_by_id(account_id)
+    if account:
+        current_balance = float(account.get('balance', 0))
+        if trans_type == 'income':
+            new_balance = current_balance + amount
+        else:
+            new_balance = current_balance - amount
+        AccountDB.update(account_id, balance=new_balance)
+        
+        # Update budget spent for expenses
+        if trans_type == 'expense':
+            budget = BudgetDB.get_by_category(category)
+            if budget:
+                current_spent = float(budget.get('spent', 0))
+                BudgetDB.update(budget['id'], spent=current_spent + amount)
     
     flash('Transaction added successfully!', 'success')
     return redirect(url_for('transactions'))
 
 @app.route('/transaction/delete/<int:id>')
 def delete_transaction(id):
-    transaction = Transaction.query.get_or_404(id)
+    transaction = TransactionDB.get_by_id(id)
     
-    # Reverse account balance
-    account = Account.query.get(transaction.account_id)
-    if transaction.type == 'income':
-        account.balance -= transaction.amount
-    else:
-        account.balance += transaction.amount
-        # Reverse budget spent
-        budget = Budget.query.filter_by(category=transaction.category).first()
-        if budget:
-            budget.spent -= transaction.amount
+    if transaction:
+        # Reverse account balance
+        account_id = transaction.get('account_id')
+        account = AccountDB.get_by_id(account_id)
+        
+        if account:
+            current_balance = float(account.get('balance', 0))
+            amount = float(transaction.get('amount', 0))
+            trans_type = transaction.get('type')
+            
+            if trans_type == 'income':
+                new_balance = current_balance - amount
+            else:
+                new_balance = current_balance + amount
+                # Reverse budget spent
+                category = transaction.get('category')
+                budget = BudgetDB.get_by_category(category)
+                if budget:
+                    current_spent = float(budget.get('spent', 0))
+                    BudgetDB.update(budget['id'], spent=max(0, current_spent - amount))
+            
+            AccountDB.update(account_id, balance=new_balance)
+        
+        # Delete transaction
+        TransactionDB.delete(id)
+        flash('Transaction deleted successfully!', 'success')
     
-    db.session.delete(transaction)
-    db.session.commit()
-    
-    flash('Transaction deleted successfully!', 'success')
     return redirect(url_for('transactions'))
 
 @app.route('/budgets')
 def budgets():
-    budgets = Budget.query.all()
-    return render_template('budgets.html', budgets=budgets)
+    budgets_list = BudgetDB.get_all()
+    return render_template('budgets.html', budgets=budgets_list)
 
 @app.route('/budget/add', methods=['POST'])
 def add_budget():
     category = request.form.get('category')
     limit = float(request.form.get('limit'))
     
-    existing_budget = Budget.query.filter_by(category=category).first()
+    existing_budget = BudgetDB.get_by_category(category)
     if existing_budget:
-        existing_budget.limit = limit
+        BudgetDB.update(existing_budget['id'], limit=limit)
     else:
-        new_budget = Budget(category=category, limit=limit)
-        db.session.add(new_budget)
+        BudgetDB.create(category, limit)
     
-    db.session.commit()
     flash('Budget updated successfully!', 'success')
     return redirect(url_for('budgets'))
 
 @app.route('/budget/delete/<int:id>')
 def delete_budget(id):
-    budget = Budget.query.get_or_404(id)
-    db.session.delete(budget)
-    db.session.commit()
+    BudgetDB.delete(id)
     flash('Budget deleted successfully!', 'success')
     return redirect(url_for('budgets'))
 
 @app.route('/api/stats')
 def api_stats():
-    accounts = Account.query.all()
-    transactions = Transaction.query.all()
+    accounts = AccountDB.get_all()
+    transactions = TransactionDB.get_all()
     
     stats = {
-        'total_balance': sum(account.balance for account in accounts),
+        'total_balance': sum(float(account.get('balance', 0)) for account in accounts),
         'total_accounts': len(accounts),
         'total_transactions': len(transactions),
-        'total_income': sum(t.amount for t in transactions if t.type == 'income'),
-        'total_expenses': sum(t.amount for t in transactions if t.type == 'expense')
+        'total_income': sum(float(t.get('amount', 0)) for t in transactions if t.get('type') == 'income'),
+        'total_expenses': sum(float(t.get('amount', 0)) for t in transactions if t.get('type') == 'expense')
     }
     
     return jsonify(stats)
