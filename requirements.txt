@@ -1,4 +1,5 @@
 Flask
-Flask-SQLAlchemy
 Pillow
 supabase
+python-dotenv
+python-dateutil
