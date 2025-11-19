@@ -35,13 +35,13 @@
                 {% for transaction in transactions %}
                 <tr class="hover:bg-gray-50 transition">
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                        {{ transaction.date.strftime('%Y-%m-%d') }}
+                        {{ transaction.date|format_date }}
                     </td>
                     <td class="px-6 py-4 text-sm text-gray-800 font-medium">
                         {{ transaction.description }}
                     </td>
                     <td class="px-6 py-4 text-sm text-gray-600">
-                        {{ transaction.account.name }}
+                        {{ transaction.account.name if transaction.account else 'N/A' }}
                     </td>
                     <td class="px-6 py-4 text-sm">
                         <span class="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-xs font-semibold">
