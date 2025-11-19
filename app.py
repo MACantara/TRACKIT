@@ -12,7 +12,6 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, login_user, logout_user, \
     current_user, login_required, UserMixin
 from flask_migrate import Migrate
-from itsdangerous import URLSafeTimedSerializer
 from datetime import datetime
 from pytz import timezone
 from psycopg2 import connect, Error
@@ -21,8 +20,6 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 from werkzeug.wrappers import Response
 from collections import defaultdict
-from email.mime.text import MIMEText
-import smtplib
 
 # Import the reportlab modules for PDF generation
 from reportlab.lib.pagesizes import letter
@@ -212,60 +209,6 @@ def sign_up():
         db.session.commit()
         return redirect(url_for('log_in'))
     return render_template('sign-up.html')
-
-@app.route('/forgot-password', methods=['GET', 'POST'])
-def forgot_password():
-    s = URLSafeTimedSerializer(app.config['SECRET_KEY'])
-    if request.method == 'POST':
-        email = request.form['email']
-        user = User.query.filter_by(email=email).first()
-
-        if user:
-            token = s.dumps(email, salt='password-reset-salt')
-            reset_url = url_for('reset_password', token=token, _external=True)
-            msg_body = f'''To reset your password, visit the following link:
-{reset_url}
-
-If you did not make this request then simply ignore this email and no changes will be made.
-'''
-            send_email(email, 'Password Reset Request', msg_body)
-            flash('An email has been sent with instructions to reset your password.', 'info')
-            return redirect(url_for('log_in'))
-        else:
-            flash('This email does not exist in our database.', 'warning')
-    return render_template('forgot-password.html')
-
-def send_email(to, subject, text):
-    msg = MIMEText(text)
-    msg['Subject'] = subject
-    msg['From'] = os.getenv('GMAIL_EMAIL')
-    msg['To'] = to
-
-    s = smtplib.SMTP('smtp.gmail.com', 587)
-    s.starttls()
-    s.login(os.getenv('GMAIL_EMAIL'), os.getenv('GMAIL_PASSWORD'))
-    s.send_message(msg)
-    s.quit()
-
-@app.route('/reset-password/<token>', methods=['GET', 'POST'])
-def reset_password(token):
-    s = URLSafeTimedSerializer(app.config['SECRET_KEY'])
-    try:
-        email = s.loads(token, salt='password-reset-salt', max_age=3600)
-    except:
-        flash('The password reset link is invalid or has expired.', 'warning')
-        return redirect(url_for('forgot_password'))
-
-    if request.method == 'POST':
-        password = request.form['password']
-        user = User.query.filter_by(email=email).first()
-        user.password_hash = generate_password_hash(password)
-        db.session.commit()
-        user = User.query.filter_by(email=email).first()  # Fetch the user again after the update
-        flash('Your password has been updated!', 'success')
-        return redirect(url_for('log_in'))
-
-    return render_template('reset-password.html', token=token)
 
 @app.route("/logout")
 @login_required
