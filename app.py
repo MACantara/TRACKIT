@@ -14,7 +14,6 @@ from flask_login import LoginManager, login_user, logout_user, \
 from flask_migrate import Migrate
 from datetime import datetime
 from pytz import timezone
-from psycopg2 import connect, Error
 from dotenv import load_dotenv
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
