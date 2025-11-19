@@ -31,7 +31,7 @@
         }
     </style>
 </head>
-<body class="bg-gray-50">
+<body class="min-h-screen flex flex-col bg-gray-50">
     <!-- Navigation -->
     <nav class="gradient-bg text-white shadow-lg">
         <div class="container mx-auto px-4 py-4">
@@ -100,12 +100,12 @@
     {% endwith %}
 
     <!-- Main Content -->
-    <main class="container mx-auto px-4 py-8">
+    <main class="container mx-auto px-4 py-8 flex-1">
         {% block content %}{% endblock %}
     </main>
 
     <!-- Footer -->
-    <footer class="bg-gray-800 text-white mt-16 py-6">
+    <footer class="bg-gray-800 text-white py-6 mt-auto">
         <div class="container mx-auto px-4 text-center">
             <p>&copy; 2025 TRACKIT. All rights reserved.</p>
             <p class="text-sm text-gray-400 mt-2">Tracking Real Time Accounts, Costs, and Keeping It Tidy</p>
