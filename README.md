@@ -16,8 +16,8 @@ A responsive Progressive Web App (PWA) built with Flask for managing personal fi
 
 ## 🛠️ Tech Stack
 
-- **Backend**: Python, Flask, SQLAlchemy
-- **Database**: Supabase PostgreSQL (production) / SQLite (local dev)
+- **Backend**: Python, Flask
+- **Database**: Supabase PostgreSQL
 - **Frontend**: HTML, Tailwind CSS v4, Bootstrap Icons
 - **PWA**: Service Worker, Web Manifest
 
@@ -45,14 +45,9 @@ A responsive Progressive Web App (PWA) built with Flask for managing personal fi
    pip install -r requirements.txt
    ```
 
-5. **Configure database (choose one)**
-
-   **Option A: SQLite (Quick Start)**
-   - No setup needed! App will use SQLite by default
-   - Perfect for local development and testing
-
-   **Option B: Supabase PostgreSQL (Production)**
-   - See [SUPABASE_SETUP.md](SUPABASE_SETUP.md) for detailed instructions
+5. **Configure Supabase Database**
+   - See [QUICKSTART.md](QUICKSTART.md) for quick setup (5 minutes)
+   - Or [SUPABASE_SETUP.md](SUPABASE_SETUP.md) for detailed instructions
    - Copy `.env.example` to `.env` and add your Supabase credentials
    - Run `supabase_schema.sql` in Supabase SQL Editor
 
@@ -153,10 +148,10 @@ TRACKIT/
 │   ├── manifest.json    # PWA manifest
 │   ├── service-worker.js # Service worker for offline
 │   └── icons/           # PWA icons
-├── scripts/             # Utility scripts
-│   ├── seed_data.py     # Sample data generator
-│   └── generate_icons.py # Icon generator
-└── trackit.db           # SQLite database (local only)
+└── scripts/             # Utility scripts
+    ├── seed_data.py     # Sample data generator
+    ├── generate_icons.py # Icon generator
+    └── test_db.py       # Database connection test
 ```
 
 ## 🎨 Customization
