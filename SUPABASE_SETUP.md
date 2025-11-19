@@ -1,7 +1,7 @@
 # Supabase PostgreSQL Setup Guide for TRACKIT
 
 ## Overview
-TRACKIT now supports both **Supabase PostgreSQL** (production) and **SQLite** (local development). The app automatically detects which database to use based on environment variables.
+TRACKIT uses Supabase PostgreSQL for all database operations. This guide will help you set up your Supabase project and configure the app.
 
 ## 🚀 Setup Instructions
 
@@ -116,27 +116,22 @@ python app.py
 You should see:
 ```
 ✓ Connected to Supabase PostgreSQL
-✓ Using Supabase PostgreSQL database
 ```
 
-If Supabase credentials are not set, it falls back to SQLite:
+If Supabase credentials are not set, you'll see an error:
 ```
-✓ Using SQLite database (local development)
+⚠ Supabase credentials not found. Set SUPABASE_URL and SUPABASE_KEY environment variables.
 ```
 
-## 🔄 Database Migration
+## 🔄 Populating Sample Data
 
-### From SQLite to Supabase
+To add sample data for testing:
 
-If you have existing SQLite data to migrate:
+```bash
+python scripts/seed_data.py --reset
+```
 
-1. Export data from SQLite
-2. Use the seed script with Supabase configured:
-   ```bash
-   python scripts/seed_data.py --reset
-   ```
-
-Or manually insert via Supabase dashboard.
+This will create sample accounts, transactions, and budgets.
 
 ## 📊 Table Structure Reference
 
@@ -180,12 +175,8 @@ Or manually insert via Supabase dashboard.
 - Check your DATABASE_URL is correct
 - Verify your IP is not blocked (Supabase > Settings > Database > Connection pooling)
 
-### "No module named 'psycopg2'"
+### "No module named 'supabase'"
 - Install dependencies: `pip install -r requirements.txt`
-
-### App uses SQLite instead of Supabase
-- Check environment variables are set correctly
-- Ensure DATABASE_URL starts with `postgresql://` not `postgres://`
 
 ## 🎯 Using Direct Supabase Client
 
@@ -203,7 +194,7 @@ accounts = SupabaseHelper.select_all('account')
 
 ## 📝 Notes
 
-- SQLAlchemy ORM still works the same way
-- `database.py` handles the switching automatically
-- Both SQLite and PostgreSQL are supported
-- No code changes needed in routes/models
+- The app uses the official Supabase Python library
+- All database operations use Supabase REST API
+- No ORM overhead - direct dictionary-based data access
+- Environment variables required for app to function
